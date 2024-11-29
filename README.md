@@ -42,7 +42,13 @@ yarn install
 pnpm install
 ```
 
-3. Start the development server:
+3. Set up environment variables:
+
+```bash
+cp .env.example .env
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
@@ -52,7 +58,7 @@ yarn dev
 pnpm dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Project Structure
 
