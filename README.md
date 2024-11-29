@@ -75,6 +75,32 @@ src/
 - **Embedding Tab**: Demonstrates vector embedding generation and similarity computation
 - **Generation Tab**: Shows how context and queries combine for response generation
 
+## Roadmap
+
+- [x] Text chunking tab
+  - [x] Add configurable chunk size and overlap settings
+  - [x] Support multiple splitting strategies (character, recursive character)
+  - [x] Enable real-time preview of splitting results
+  - [ ] Add custom delimiter-based splitting
+  - [ ] Implement markdown-aware splitting
+- [x] Embedding tab
+  - [x] Basic vector similarity visualization
+  - [x] Real-time similarity score display
+  - [ ] Implement PCA (Principal Component Analysis) for 2D/3D visualization
+  - [ ] Add t-SNE visualization support for better cluster representation
+  - [ ] Support real-time visualization updates during embedding generation
+- [ ] Implement advanced retrieval and reranking features
+  - [x] Basic semantic search functionality
+  - [x] Real-time similarity scoring
+  - [ ] Support multiple reranking models (e.g., Cohere, BGE)
+  - [ ] Implement hybrid search (combining sparse and dense retrievers)
+  - [ ] Visualize reranking process and score changes
+  - [ ] Enable A/B testing of different reranking strategies
+- [ ] Generation tab
+  - [x] Real-time response generation
+  - [x] Context display
+  - [ ] Add configurable generation model settings (e.g., temperature, top_p, max_tokens)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
