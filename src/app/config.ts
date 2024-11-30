@@ -20,4 +20,7 @@ export default class AppConfig {
     apiKey: process.env.GROQ_API_KEY!,
     model: process.env.GROQ_MODEL! as GroqChatModelId,
   };
+
+  static readonly googleSiteVerificationId =
+    process.env.GOOGLE_SITE_VERIFICATION_ID;
 }

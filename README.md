@@ -102,7 +102,7 @@ src/
   - [ ] Implement hybrid search (combining sparse and dense retrievers)
   - [ ] Visualize reranking process and score changes
   - [ ] Enable A/B testing of different reranking strategies
-- [ ] Generation tab
+- [x] Generation tab
   - [x] Real-time response generation
   - [x] Context display
   - [ ] Add configurable generation model settings (e.g., temperature, top_p, max_tokens)
