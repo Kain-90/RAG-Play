@@ -29,6 +29,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTextSplittingStore } from "@/app/stores/experiment/text-splitting-store";
 import Langchain from "@/components/langchain.svg";
 import Image from "next/image";
+import { HelpCircle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Add new type for enhanced text blocks
 interface EnhancedTextBlock extends TextBlock {
@@ -222,7 +229,19 @@ export function TextSplittingTab() {
 
         <div className="flex items-center space-x-4 mt-4">
           <div className="flex items-center">
-            <label className="text-sm font-medium">Chunk Size:</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Chunk Size
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Maximum number of characters in each chunk. Larger chunks preserve more context but may exceed token limits.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
             <Input
               type="number"
               value={chunkSize}
@@ -233,7 +252,19 @@ export function TextSplittingTab() {
             />
           </div>
           <div className="flex items-center">
-            <label className="text-sm font-medium">Overlap Size:</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              Overlap Size
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Number of characters to overlap between chunks. Helps maintain context across chunk boundaries.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
             <Input
               type="number"
               value={overlap}
