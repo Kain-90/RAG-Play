@@ -276,10 +276,11 @@ export function EmbeddingTab() {
             mathematical operations like addition and subtraction to carry
             semantic meaning.</p>
 
-            <p>For example, the vector representation of "king"
-            minus "man" plus "woman" should be close to the vector representation
-            of "queen." In other words, vector embeddings are a numerical
-            representation of a particular data object.</p>
+            <p>For example, the vector representation of &quot;king&quot;
+            minus &quot;man&quot; plus &quot;woman&quot; should be close to the
+            vector representation of &quot;queen.&quot; In other words, vector
+            embeddings are a numerical representation of a particular data
+            object.</p>
           </blockquote>
         </CardDescription>
       </CardHeader>
