@@ -118,7 +118,13 @@ export function EmbeddingTab() {
       setSimilarities([]);
       setQuestionEmbedding([]);
     }
-  }, [question, model, debouncedGetEmbedding, setQuestionEmbedding, setSimilarities]);
+  }, [
+    question,
+    model,
+    debouncedGetEmbedding,
+    setQuestionEmbedding,
+    setSimilarities,
+  ]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -209,7 +215,7 @@ export function EmbeddingTab() {
         // Store worker in global state
         setWorker(newWorker);
       }
-      
+
       // Use store's worker for local reference
       workerRef.current = worker;
     } catch (error) {
@@ -223,7 +229,14 @@ export function EmbeddingTab() {
     return () => {
       workerRef.current = null;
     };
-  }, [model, worker, setWorker, debouncedGetEmbedding, setBlocksEmbedding, setQuestionEmbedding]);
+  }, [
+    model,
+    worker,
+    setWorker,
+    debouncedGetEmbedding,
+    setBlocksEmbedding,
+    setQuestionEmbedding,
+  ]);
 
   // Cleanup when app unmounts
   useEffect(() => {
@@ -255,6 +268,19 @@ export function EmbeddingTab() {
         <CardDescription>
           View text blocks and their vector embeddings side by side. Ask
           questions to find similar content through semantic search.
+          <br />
+          <br />
+          <blockquote className="text-xs text-muted-foreground border-l-4 border-muted-foreground/25 px-4 py-2 space-y-2">
+            <p>Words that are semantically similar are often represented by vectors
+            that are close to each other in this vector space. This allows for
+            mathematical operations like addition and subtraction to carry
+            semantic meaning.</p>
+
+            <p>For example, the vector representation of "king"
+            minus "man" plus "woman" should be close to the vector representation
+            of "queen." In other words, vector embeddings are a numerical
+            representation of a particular data object.</p>
+          </blockquote>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
