@@ -1,11 +1,10 @@
-export const CONTEXT_PROMPT_TEMPLATE = `
-Please answer the user's question based on the following context. If an answer cannot be found in the context, please clearly state so.
+export const SYSTEM_PROMPT_TEMPLATE = (context: string) => `
+You are a helpful AI assistant. Use the following pieces of context to answer the user's question. 
+If you don't know the answer, just say that you don't know. Don't try to make up an answer.
 
-# Context:
-{context}
+Context:
+${context}`.trim();
 
-# User question:
-{question}
-
-Please provide a detailed answer:
-`.trim()
+export const USER_PROMPT_TEMPLATE = (question: string) => {
+  return `${question}`;
+};

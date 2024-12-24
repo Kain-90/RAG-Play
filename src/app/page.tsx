@@ -36,7 +36,7 @@ const FeatureCard = ({ feature }: { feature: (typeof features)[0] }) => (
     <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3">
       {feature.icon}
     </div>
-    <h3 className="mb-3 text-lg font-bold">{feature.title}</h3>
+    <h2 className="mb-3 text-lg font-bold">{feature.title}</h2>
     <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-4">
       {feature.description}
     </p>
@@ -104,21 +104,14 @@ export default function Home() {
         {/* Features Section */}
         <section className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
-            <div className="w-[280px] shrink-0">
-              <FeatureCard feature={features[0]} />
-            </div>
-            <Arrow />
-            <div className="w-[280px] shrink-0">
-              <FeatureCard feature={features[1]} />
-            </div>
-            <Arrow />
-            <div className="w-[280px] shrink-0">
-              <FeatureCard feature={features[2]} />
-            </div>
-            <Arrow />
-            <div className="w-[280px] shrink-0">
-              <FeatureCard feature={features[3]} />
-            </div>
+            {features.map((feature, index) => (
+              <>
+                <div className="w-[280px] shrink-0">
+                  <FeatureCard feature={feature} />
+                </div>
+                {index < features.length - 1 && <Arrow />}
+              </>
+            ))}
           </div>
         </section>
       </main>

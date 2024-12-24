@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTextSplittingStore } from "@/app/stores/experiment/text-splitting-store";
 import Langchain from "@/components/langchain.svg";
 import Image from "next/image";
+import Link from "next/link";
 import { HelpCircle } from "lucide-react";
 import {
   Tooltip,
@@ -62,7 +63,7 @@ async function splitText(
         splitter = new RecursiveCharacterTextSplitter({
           chunkSize: options.chunkSize,
           chunkOverlap: options.overlap,
-          separators: ["\n\n"],
+          separators: ["\n\n", "\n", " ", ""],
         });
         break;
       default:
@@ -155,38 +156,38 @@ export function TextSplittingTab() {
   // Modify the chunk hover handler to include scrolling
   const handleChunkHover = (index: number | null) => {
     setHoveredChunkIndex(index);
-    
+
     if (index !== null && textareaRef.current) {
       const block = blocks[index];
       const textarea = textareaRef.current;
-      
+
       // Create a temporary div to measure text dimensions
-      const measureDiv = document.createElement('div');
+      const measureDiv = document.createElement("div");
       measureDiv.style.cssText = window.getComputedStyle(textarea).cssText;
-      measureDiv.style.height = 'auto';
+      measureDiv.style.height = "auto";
       measureDiv.style.width = `${textarea.clientWidth}px`;
-      measureDiv.style.position = 'absolute';
-      measureDiv.style.visibility = 'hidden';
-      measureDiv.style.whiteSpace = 'pre-wrap';
-      
+      measureDiv.style.position = "absolute";
+      measureDiv.style.visibility = "hidden";
+      measureDiv.style.whiteSpace = "pre-wrap";
+
       // Get text before the highlighted chunk
       const textBeforeChunk = text.substring(0, block.startIndex);
       measureDiv.textContent = textBeforeChunk;
-      
+
       document.body.appendChild(measureDiv);
       const textHeight = measureDiv.offsetHeight;
       document.body.removeChild(measureDiv);
-      
+
       // Calculate optimal scroll position
       const scrollPosition = Math.max(
         0,
         textHeight - textarea.clientHeight / 3
       );
-      
+
       // Smooth scroll to position
       textarea.scrollTo({
         top: scrollPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -196,11 +197,14 @@ export function TextSplittingTab() {
       <CardHeader>
         <CardTitle>Text Splitting</CardTitle>
         <CardDescription>
-          Visualize how documents are split into meaningful chunks while preserving semantic coherence
+          Visualize how documents are split into meaningful chunks while
+          preserving semantic coherence
           <br />
-          - Character strategy: Simple splitting with fixed chunk size. Best for straightforward text processing.
-          <br />
-          - Recursive character strategy: Intelligent splitting that preserves natural language boundaries and semantic meaning. Recommended for production use.
+          - Character strategy: Simple splitting with fixed chunk size. Best for
+          straightforward text processing.
+          <br />- Recursive character strategy: Intelligent splitting that
+          preserves natural language boundaries and semantic meaning.
+          Recommended for production use.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -224,7 +228,14 @@ export function TextSplittingTab() {
               })}
             </SelectContent>
           </Select>
-          <Image src={Langchain} alt="Langchain" className="w-8 h-8" />
+          <Link
+            href="https://js.langchain.com/docs/how_to#text-splitters"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer"
+          >
+            <Image src={Langchain} alt="Langchain" title="Langchain text splitters" className="w-8 h-8"/>
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4 mt-4">
@@ -237,7 +248,10 @@ export function TextSplittingTab() {
                     <HelpCircle className="h-4 w-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Maximum number of characters in each chunk. Larger chunks preserve more context but may exceed token limits.</p>
+                    <p>
+                      Maximum number of characters in each chunk. Larger chunks
+                      preserve more context but may exceed token limits.
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -260,7 +274,10 @@ export function TextSplittingTab() {
                     <HelpCircle className="h-4 w-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Number of characters to overlap between chunks. Helps maintain context across chunk boundaries.</p>
+                    <p>
+                      Number of characters to overlap between chunks. Helps
+                      maintain context across chunk boundaries.
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -287,6 +304,7 @@ export function TextSplittingTab() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:text-primary transition-colors"
+                  title="AWS RAG Documentation"
                 >
                   AWS Documentation
                 </a>
@@ -296,7 +314,7 @@ export function TextSplittingTab() {
               ref={textareaRef}
               value={getHighlightedText()}
               onChange={(e) => setText(e.target.value)}
-              className="min-h-screen resize-y focus-visible:ring-1 font-mono"
+              className="min-h-screen resize-y border-2 border-dashed border-muted-foreground/25 focus-visible:ring-1 font-mono"
               placeholder="Enter text to split here..."
             />
           </div>
@@ -305,10 +323,29 @@ export function TextSplittingTab() {
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium">Generated Chunks</label>
               <div className="text-xs text-muted-foreground">
-                Hover over chunks to highlight their position in the source document
+                Hover over chunks to highlight their position in the source
+                document
               </div>
             </div>
-            <div className="max-h-screen rounded-lg border border-input bg-muted/5 p-4 overflow-y-auto">
+            <div className="max-h-screen rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 p-4 overflow-y-auto">
+              <div className="flex gap-4 mb-4 pb-3 border-b border-border/50">
+                <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">Chunks:</span>
+                  <span className="text-sm font-semibold">{blocks.length}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">Avg. Size:</span>
+                  <span className="text-sm font-semibold">
+                    {blocks.length > 0
+                      ? Math.round(
+                          blocks.reduce((acc, block) => acc + block.text.length, 0) /
+                            blocks.length
+                        )
+                      : 0}{" "}
+                    chars
+                  </span>
+                </div>
+              </div>
               <div className="text-base leading-relaxed">
                 {blocks.map((block, index) => (
                   <span
