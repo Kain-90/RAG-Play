@@ -22,7 +22,7 @@ export function Footer() {
               <Link
                 href={githubUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener nofollow"
                 className="font-medium underline underline-offset-4 hover:text-primary"
               >
                 GitHub
