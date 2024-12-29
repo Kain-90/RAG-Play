@@ -15,6 +15,14 @@ import { SYSTEM_PROMPT_TEMPLATE, USER_PROMPT_TEMPLATE } from "@/app/experiment/c
 import { useChat } from "ai/react";
 import { MessageDisplay } from "./message-display";
 import { useState } from "react";
+import { HelpCircle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
 
 export function GenerationTab() {
   const { blocks } = useTextSplittingStore();
@@ -25,6 +33,8 @@ export function GenerationTab() {
     .map(({ index }) => blocks[index].text);
   const [systemMessage, setSystemMessage] = useState(SYSTEM_PROMPT_TEMPLATE(topSimilarBlocks.join("\n\n")));
   const [userMessage, setUserMessage] = useState(USER_PROMPT_TEMPLATE(question || ""));
+  const [temperature, setTemperature] = useState(0.3);
+  const [maxTokens, setMaxTokens] = useState(1000);
 
   const handleGenerate = async () => {
     if (!topSimilarBlocks.length || !question) return;
@@ -35,6 +45,10 @@ export function GenerationTab() {
     }, {
       body: {
         system: systemMessage,
+        modelConfig: {
+          temperature,
+          maxTokens,
+        },
       }
     });
   };
@@ -72,6 +86,76 @@ export function GenerationTab() {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center">
+            <label className="text-sm font-medium flex items-center gap-2">
+              Temperature:
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Controls randomness in the output. Higher values (0.8-1.0) make the output more creative but less focused,
+                      lower values (0.2-0.5) make it more deterministic and focused.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
+            <Input
+              type="number"
+              value={temperature}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value > 1) {
+                  setTemperature(1);
+                } else {
+                  setTemperature(value);
+                }
+              }}
+              min="0"
+              max="1"
+              step="0.1"
+              className="w-24 ml-2"
+            />
+          </div>
+          <div className="flex items-center">
+            <label className="text-sm font-medium flex items-center gap-2">
+              Max Tokens:
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Maximum number of tokens to generate in the response. Higher values allow for longer responses
+                      but may increase processing time and costs.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
+            <Input
+              type="number"
+              value={maxTokens}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value > 4096) {
+                  setMaxTokens(4096);
+                } else {
+                  setMaxTokens(value);
+                }
+              }}
+              min="1"
+              max="4096"
+              className="w-24 ml-2"
+            />
+          </div>
+        </div>
+        
         <div className="grid grid-cols-2 gap-4">
           {/* Prompt Preview Section */}
           <section className="space-y-2" aria-label="Prompt Preview Section">

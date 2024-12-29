@@ -241,7 +241,7 @@ export function TextSplittingTab() {
         <div className="flex items-center space-x-4 mt-4">
           <div className="flex items-center">
             <label className="text-sm font-medium flex items-center gap-2">
-              Chunk Size
+              Chunk Size:
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -267,7 +267,7 @@ export function TextSplittingTab() {
           </div>
           <div className="flex items-center">
             <label className="text-sm font-medium flex items-center gap-2">
-              Overlap Size
+              Overlap Size:
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>

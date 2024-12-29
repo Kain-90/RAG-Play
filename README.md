@@ -95,7 +95,7 @@ src/
   - [ ] Implement PCA (Principal Component Analysis) for 2D/3D visualization
   - [ ] Add t-SNE visualization support for better cluster representation
   - [ ] Support real-time visualization updates during embedding generation
-- [ ] Implement advanced retrieval and reranking features
+- [x] Implement advanced retrieval and reranking features
   - [x] Basic semantic search functionality
   - [x] Real-time similarity scoring
   - [ ] Support multiple reranking models (e.g., Cohere, BGE)
@@ -105,7 +105,7 @@ src/
 - [x] Generation tab
   - [x] Real-time response generation
   - [x] Context display
-  - [ ] Add configurable generation model settings (e.g., temperature, top_p, max_tokens)
+  - [x] Add configurable generation model settings (e.g., temperature, max_tokens)
 
 ## Contributing
 

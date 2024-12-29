@@ -3,14 +3,15 @@ import { groq } from "@ai-sdk/groq";
 import AppConfig from "@/app/config";
 
 export async function POST(req: Request) {
-  const { messages, system } = await req.json();
+  const { messages, system, modelConfig } = await req.json();
 
   const result = streamText({
     model: groq(AppConfig.groq.model),
     system,
     messages,
+    temperature: modelConfig.temperature,
+    maxTokens: modelConfig.maxTokens,
   });
-  // FIXME: recursive splitting chunks can't be handled
 
   return result.toDataStreamResponse();
 }
