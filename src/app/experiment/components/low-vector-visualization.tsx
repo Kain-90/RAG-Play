@@ -11,6 +11,7 @@ import {
   Plugin,
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
+import { cn } from "@/lib/utils";
 
 interface Vector {
   x: number;
@@ -26,6 +27,7 @@ interface LowVectorVisualizationProps {
   title?: string;
   datasetLabel?: string;
   queryLabel?: string;
+  className?: string;
 }
 
 const nearestNeighborsPlugin: Plugin<"scatter"> = {
@@ -94,6 +96,7 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
   title = "Low Vector Visualization",
   datasetLabel = "Vectors",
   queryLabel = "Query",
+  className,
 }) => {
   const chartData = useMemo(() => {
     const datasets = [
@@ -198,7 +201,10 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
 
   return (
     <div
-      className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+      className={cn(
+        "relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm",
+        className
+      )}
       role="region"
       aria-label={`${title} scatter plot`}
     >

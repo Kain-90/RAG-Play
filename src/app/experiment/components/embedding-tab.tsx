@@ -424,6 +424,7 @@ export function EmbeddingTab() {
                 title="Embedding Similarity"
                 datasetLabel="Chunks"
                 queryLabel="Question"
+                className="h-[400px]"
               />
             </div>
 

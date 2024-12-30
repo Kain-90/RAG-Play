@@ -2,9 +2,7 @@
 
 An interactive visualization tool for understanding Retrieval-Augmented Generation (RAG) pipelines. This project helps developers and researchers explore and debug each step of the RAG process through hands-on experiments and real-time demonstrations.
 
-![home page](./doc/image/home.jpg)
-![experiment page](./doc/image/experiment.jpg)
-
+![screenshot](./doc/image/screenshot.jpeg)
 
 ## Features
 

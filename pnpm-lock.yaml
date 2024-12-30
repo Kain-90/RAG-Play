@@ -14,6 +14,9 @@ importers:
       '@huggingface/transformers':
         specifier: ^3.0.0
         version: 3.2.4
+      '@langchain/textsplitters':
+        specifier: ^0.1.0
+        version: 0.1.0(@langchain/core@0.3.26(openai@4.77.0(zod@3.24.1)))
       '@radix-ui/react-progress':
         specifier: ^1.1.0
         version: 1.1.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
