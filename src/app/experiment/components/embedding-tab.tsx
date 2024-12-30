@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import LowVectorVisualization from "@/app/experiment/components/low-vector-visualization";
 import {
   Card,
   CardContent,
@@ -32,6 +33,7 @@ import { useEmbeddingStore } from "@/app/stores/experiment/embedding-store";
 import { cos_sim } from "@huggingface/transformers";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { embedTo2D } from "@/lib/utils";
 
 export function EmbeddingTab() {
   const { blocks } = useTextSplittingStore();
@@ -109,6 +111,22 @@ export function EmbeddingTab() {
     },
     500
   );
+
+  const embedding2d = useMemo(() => {
+    if (blocksEmbedding.length > 0 && questionEmbedding.length > 0) {
+      const finalEmbedding = [
+        questionEmbedding[0],
+        ...blocksEmbedding.map((embedding) => embedding[0]),
+      ];
+      const embedding2d = embedTo2D(finalEmbedding);
+      return embedding2d.map((point, index) => ({
+        ...point,
+        title: index === 0 ? question.slice(0, 30) : `Chunk ${index}`,
+        // details: index === 0 ? [] : []
+      }));
+    }
+    return [];
+  }, [questionEmbedding, blocksEmbedding]);
 
   useEffect(() => {
     if (question.trim()) {
@@ -266,21 +284,25 @@ export function EmbeddingTab() {
       <CardHeader>
         <CardTitle>Vector Embedding & Similarity</CardTitle>
         <CardDescription>
-          View text blocks and their vector embeddings side by side. Ask
-          questions to find similar content through semantic search.
+          View chunks and their vector embeddings side by side. Ask questions to
+          find similar content through semantic search.
           <br />
           <br />
           <blockquote className="text-xs text-muted-foreground border-l-4 border-muted-foreground/25 px-4 py-2 space-y-2">
-            <p>Words that are semantically similar are often represented by vectors
-            that are close to each other in this vector space. This allows for
-            mathematical operations like addition and subtraction to carry
-            semantic meaning.</p>
+            <p>
+              Words that are semantically similar are often represented by
+              vectors that are close to each other in this vector space. This
+              allows for mathematical operations like addition and subtraction
+              to carry semantic meaning.
+            </p>
 
-            <p>For example, the vector representation of &quot;king&quot;
-            minus &quot;man&quot; plus &quot;woman&quot; should be close to the
-            vector representation of &quot;queen.&quot; In other words, vector
-            embeddings are a numerical representation of a particular data
-            object.</p>
+            <p>
+              For example, the vector representation of &quot;king&quot; minus
+              &quot;man&quot; plus &quot;woman&quot; should be close to the
+              vector representation of &quot;queen.&quot; In other words, vector
+              embeddings are a numerical representation of a particular data
+              object.
+            </p>
           </blockquote>
         </CardDescription>
       </CardHeader>
@@ -393,9 +415,51 @@ export function EmbeddingTab() {
           )}
         </div>
 
+        {embedding2d.length > 0 && (
+          <div className="flex gap-4">
+            <div className="w-1/2">
+              <LowVectorVisualization
+                data={embedding2d.slice(1)}
+                query={embedding2d[0]}
+                title="Embedding Similarity"
+                datasetLabel="Chunks"
+                queryLabel="Question"
+              />
+            </div>
+
+            <div className="w-1/2 text-sm text-muted-foreground space-y-2 rounded-lg border border-border bg-muted/50 p-4">
+              <p>
+                This visualization uses UMAP (Uniform Manifold Approximation and
+                Projection) to reduce the high-dimensional embedding vectors
+                (typically 384 or 768 dimensions) into 2D space for
+                visualization purposes.
+              </p>
+              <p>
+                <strong>Important notes:</strong>
+              </p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>
+                  The visualization is approximate - distances between points in
+                  2D may not exactly match the actual cosine similarities
+                  between the original high-dimensional vectors.
+                </li>
+                <li>
+                  UMAP results can vary between runs due to its stochastic
+                  nature. The same embeddings may appear in different
+                  arrangements each time the visualization is generated.
+                </li>
+                <li>
+                  Dashed lines connect the query point to its 5 nearest
+                  neighbors in the 2D projection space.
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Text Blocks:</label>
+            <label className="text-sm font-medium">Chunks:</label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
                 <div className="space-y-4">
@@ -406,7 +470,7 @@ export function EmbeddingTab() {
                     >
                       <p className="text-sm">{block.text}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Block {index + 1} • {block.text.length} characters
+                        Chunk {index + 1} • {block.text.length} characters
                       </p>
                     </div>
                   ))}
@@ -417,7 +481,7 @@ export function EmbeddingTab() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">
-              Blocks Embedding Vectors:
+              Chunks Embedding Vectors:
             </label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
@@ -442,7 +506,7 @@ export function EmbeddingTab() {
                             ...]
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            Block {blockIndex + 1} • {blockEmbedding[0].length}{" "}
+                            Chunk {blockIndex + 1} • {blockEmbedding[0].length}{" "}
                             dimensions
                           </p>
                         </div>
@@ -455,7 +519,7 @@ export function EmbeddingTab() {
                       ? `Error: ${loadingState.error}`
                       : loadingState.status !== "idle"
                       ? "Waiting for model to load..."
-                      : "No text blocks to embed"}
+                      : "No chunks to embed"}
                   </div>
                 )}
               </ScrollArea>
@@ -463,7 +527,7 @@ export function EmbeddingTab() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Similar Blocks:</label>
+            <label className="text-sm font-medium">Similar Chunks:</label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
                 {similarities.length > 0 ? (
@@ -475,7 +539,7 @@ export function EmbeddingTab() {
                       >
                         <p className="text-sm">{blocks[index].text}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Block {index + 1} • Similarity:{" "}
+                          Chunk {index + 1} • Similarity:{" "}
                           {similarity.toFixed(4)}
                         </p>
                       </div>
@@ -483,7 +547,7 @@ export function EmbeddingTab() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    Ask a question to see similar blocks
+                    Ask a question to see similar chunks
                   </div>
                 )}
               </ScrollArea>

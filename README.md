@@ -92,9 +92,8 @@ src/
 - [x] Embedding tab
   - [x] Basic vector similarity visualization
   - [x] Real-time similarity score display
-  - [ ] Implement PCA (Principal Component Analysis) for 2D/3D visualization
-  - [ ] Add t-SNE visualization support for better cluster representation
-  - [ ] Support real-time visualization updates during embedding generation
+  - [x] Implement UMAP for high-dimensional vector visualization
+  - [x] Support real-time visualization updates during embedding generation
 - [x] Implement advanced retrieval and reranking features
   - [x] Basic semantic search functionality
   - [x] Real-time similarity scoring

@@ -38,7 +38,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-// Add new type for enhanced text blocks
 interface EnhancedTextBlock extends TextBlock {
   startIndex: number;
   endIndex: number;
@@ -234,7 +233,12 @@ export function TextSplittingTab() {
             rel="noopener noreferrer"
             className="cursor-pointer"
           >
-            <Image src={Langchain} alt="Langchain" title="Langchain text splitters" className="w-8 h-8"/>
+            <Image
+              src={Langchain}
+              alt="Langchain"
+              title="Langchain text splitters"
+              className="w-8 h-8"
+            />
           </Link>
         </div>
 
@@ -330,16 +334,22 @@ export function TextSplittingTab() {
             <div className="max-h-screen rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 p-4 overflow-y-auto">
               <div className="flex gap-4 mb-4 pb-3 border-b border-border/50">
                 <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-md">
-                  <span className="text-xs font-medium text-muted-foreground">Chunks:</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Chunks:
+                  </span>
                   <span className="text-sm font-semibold">{blocks.length}</span>
                 </div>
                 <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-md">
-                  <span className="text-xs font-medium text-muted-foreground">Avg. Size:</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Avg. Size:
+                  </span>
                   <span className="text-sm font-semibold">
                     {blocks.length > 0
                       ? Math.round(
-                          blocks.reduce((acc, block) => acc + block.text.length, 0) /
-                            blocks.length
+                          blocks.reduce(
+                            (acc, block) => acc + block.text.length,
+                            0
+                          ) / blocks.length
                         )
                       : 0}{" "}
                     chars
