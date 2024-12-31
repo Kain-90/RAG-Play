@@ -30,7 +30,6 @@ import { Progress } from "@/components/ui/progress";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { useTextSplittingStore } from "@/app/stores/experiment/text-splitting-store";
 import { useEmbeddingStore } from "@/app/stores/experiment/embedding-store";
-import { cos_sim } from "@huggingface/transformers";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { embedTo2D } from "@/lib/utils";
@@ -44,7 +43,6 @@ export function EmbeddingTab() {
     question,
     model,
     worker,
-    setSimilarities,
     setQuestionEmbedding,
     setBlocksEmbedding,
     setQuestion,
@@ -133,7 +131,6 @@ export function EmbeddingTab() {
       debouncedGetEmbedding(question);
     } else {
       console.log("Resetting similarity and question embedding");
-      setSimilarities([]);
       setQuestionEmbedding([]);
     }
   }, [
@@ -141,7 +138,6 @@ export function EmbeddingTab() {
     model,
     debouncedGetEmbedding,
     setQuestionEmbedding,
-    setSimilarities,
   ]);
 
   useEffect(() => {
@@ -265,19 +261,6 @@ export function EmbeddingTab() {
       }
     };
   }, [worker, setWorker]);
-
-  useEffect(() => {
-    if (questionEmbedding.length > 0 && blocksEmbedding.length > 0) {
-      const similarities = blocksEmbedding
-        .map((blockEmbedding, index) => ({
-          index,
-          similarity: cos_sim(questionEmbedding[0], blockEmbedding[0]),
-        }))
-        .sort((a, b) => b.similarity - a.similarity);
-
-      setSimilarities(similarities);
-    }
-  }, [questionEmbedding, blocksEmbedding, setSimilarities]);
 
   return (
     <Card>
