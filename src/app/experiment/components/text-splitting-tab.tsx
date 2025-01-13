@@ -37,6 +37,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { SeparatorManager } from "@/app/experiment/components/separator-manager";
+import {
+  Separator,
+  CHARACTER_SEPARATORS,
+  RECURSIVE_CHARACTER_SEPARATORS,
+} from "@/app/experiment/types/text-splitting";
 
 interface EnhancedTextBlock extends TextBlock {
   startIndex: number;
@@ -46,14 +52,20 @@ interface EnhancedTextBlock extends TextBlock {
 async function splitText(
   text: string,
   strategy: SplitStrategy,
-  options: { chunkSize: number; overlap: number }
+  options: {
+    chunkSize: number;
+    overlap: number;
+    separators: Separator | Separator[];
+  }
 ): Promise<EnhancedTextBlock[]> {
   try {
     let splitter;
     switch (strategy) {
       case "character":
         splitter = new CharacterTextSplitter({
-          separator: "\n\n",
+          separator: Array.isArray(options.separators)
+            ? options.separators[0].char
+            : options.separators.char,
           chunkSize: options.chunkSize,
           chunkOverlap: options.overlap,
         });
@@ -62,7 +74,9 @@ async function splitText(
         splitter = new RecursiveCharacterTextSplitter({
           chunkSize: options.chunkSize,
           chunkOverlap: options.overlap,
-          separators: ["\n\n", "\n", " ", ""],
+          separators: Array.isArray(options.separators)
+            ? options.separators.map((sep) => sep.char)
+            : [options.separators.char],
         });
         break;
       default:
@@ -112,10 +126,19 @@ export function TextSplittingTab() {
   const [hoveredChunkIndex, setHoveredChunkIndex] = useState<number | null>(
     null
   );
+  const [separators, setSeparators] = useState<Separator[] | Separator>(
+    strategy === "recursive-character"
+      ? RECURSIVE_CHARACTER_SEPARATORS
+      : CHARACTER_SEPARATORS
+  );
 
   const debouncedSplitText = useDebouncedCallback(async () => {
     try {
-      const newBlocks = await splitText(text, strategy, { chunkSize, overlap });
+      const newBlocks = await splitText(text, strategy, {
+        chunkSize,
+        overlap,
+        separators,
+      });
       setBlocks(newBlocks);
     } catch (error) {
       console.error("Error splitting text:", error);
@@ -124,8 +147,13 @@ export function TextSplittingTab() {
   }, 500);
 
   useEffect(() => {
+    setSeparators(
+      strategy === "recursive-character"
+        ? RECURSIVE_CHARACTER_SEPARATORS
+        : CHARACTER_SEPARATORS
+    );
     debouncedSplitText();
-  }, [text, strategy, chunkSize, overlap, debouncedSplitText]);
+  }, [text, strategy, chunkSize, overlap, separators, debouncedSplitText]);
 
   const handleChunkSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
@@ -296,6 +324,8 @@ export function TextSplittingTab() {
             />
           </div>
         </div>
+
+        <SeparatorManager separators={separators} />
 
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-3">

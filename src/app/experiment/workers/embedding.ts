@@ -98,7 +98,6 @@ self.addEventListener(
 
       const task = await PipelineSingleton.getInstance(
         (x: EmbeddingProgressMessage) => {
-          console.log("Pipeline progress:", x);
           self.postMessage(x);
         }
       );
