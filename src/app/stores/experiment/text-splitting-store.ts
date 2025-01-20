@@ -18,7 +18,7 @@ interface TextSplittingState {
 export const useTextSplittingStore = create<TextSplittingState>((set) => ({
   text: TEXT_SPLITTING_SAMPLE,
   blocks: [],
-  strategy: 'character',
+  strategy: "recursive-character",
   chunkSize: 500,
   overlap: 0,
   setText: (text) => set({ text }),
