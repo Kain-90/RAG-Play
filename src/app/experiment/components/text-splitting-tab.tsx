@@ -393,10 +393,13 @@ export function TextSplittingTab() {
                     className={`${
                       COLORS[index % COLORS.length]
                     } px-1.5 py-0.5 rounded mx-0.5 inline-block cursor-pointer 
-                    transition-opacity hover:opacity-80`}
+                    transition-opacity hover:opacity-80 relative group`}
                     onMouseEnter={() => handleChunkHover(index)}
                     onMouseLeave={() => handleChunkHover(null)}
                   >
+                    <span className="absolute -top-2 -right-1 bg-muted-foreground/10 text-muted-foreground text-[10px] px-1 rounded">
+                      {block.text.length}
+                    </span>
                     {block.text}
                   </span>
                 ))}

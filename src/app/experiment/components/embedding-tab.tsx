@@ -516,7 +516,7 @@ export function EmbeddingTab() {
               <ScrollArea className="h-full p-4">
                 {similarities.length > 0 ? (
                   <div className="space-y-2">
-                    {similarities.slice(0, 3).map(({ index, similarity }) => (
+                    {similarities.slice(0, 10).map(({ index, similarity }) => (
                       <div
                         key={index}
                         className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
