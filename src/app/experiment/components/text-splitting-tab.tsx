@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/select";
 import {
   SplitStrategy,
-  TextBlock,
   SplitStrategyList,
+  EnhancedTextBlock,
 } from "../types/text-splitting";
 import {
   CharacterTextSplitter,
@@ -43,11 +43,6 @@ import {
   CHARACTER_SEPARATORS,
   RECURSIVE_CHARACTER_SEPARATORS,
 } from "@/app/experiment/types/text-splitting";
-
-interface EnhancedTextBlock extends TextBlock {
-  startIndex: number;
-  endIndex: number;
-}
 
 async function splitText(
   text: string,
@@ -83,14 +78,14 @@ async function splitText(
         throw new Error("Invalid split strategy");
     }
 
-    const documents = await splitter.splitText(text);
+    const chunks = await splitter.splitText(text);
     let currentIndex = 0;
-    return documents.map((doc) => {
-      const startIndex = text.indexOf(doc, currentIndex);
-      const endIndex = startIndex + doc.length;
+    return chunks.map((chunk) => {
+      const startIndex = text.indexOf(chunk, currentIndex);
+      const endIndex = startIndex + chunk.length;
       currentIndex = startIndex + 1;
       return {
-        text: doc,
+        text: chunk,
         startIndex,
         endIndex,
       };
@@ -139,7 +134,12 @@ export function TextSplittingTab() {
         overlap,
         separators,
       });
-      setBlocks(newBlocks);
+      const updatedBlocks = newBlocks.map((block, index) => {
+        const overlapText = findOverlap(block, newBlocks[index - 1]);
+        return { ...block, overlapText: overlapText };
+      });
+      console.log(updatedBlocks);
+      setBlocks(updatedBlocks);
     } catch (error) {
       console.error("Error splitting text:", error);
       setBlocks([]);
@@ -217,6 +217,37 @@ export function TextSplittingTab() {
         behavior: "smooth",
       });
     }
+  };
+
+  const findOverlap = (
+    block: EnhancedTextBlock,
+    previousBlock: EnhancedTextBlock | null
+  ) => {
+    if (!previousBlock) return "";
+
+    const blockText = block.text;
+    const previousBlockText = previousBlock.text;
+
+    let overlapText = "";
+    const maxLength = Math.min(
+      blockText.length,
+      previousBlockText.length,
+      overlap
+    );
+
+    // Find the longest overlapping substring between blocks
+    for (let i = maxLength; i >= 1; i--) {
+      const blockStart = blockText.substring(0, i);
+      const previousBlockEnd = previousBlockText.substring(
+        previousBlockText.length - i
+      );
+
+      if (blockStart === previousBlockEnd) {
+        overlapText = blockStart;
+        break;
+      }
+    }
+    return overlapText;
   };
 
   return (
@@ -387,22 +418,31 @@ export function TextSplittingTab() {
                 </div>
               </div>
               <div className="text-base leading-relaxed">
-                {blocks.map((block, index) => (
-                  <span
-                    key={index}
-                    className={`${
-                      COLORS[index % COLORS.length]
-                    } px-1.5 py-0.5 rounded mx-0.5 inline-block cursor-pointer 
-                    transition-opacity hover:opacity-80 relative group`}
-                    onMouseEnter={() => handleChunkHover(index)}
-                    onMouseLeave={() => handleChunkHover(null)}
-                  >
-                    <span className="absolute -top-2 -right-1 bg-muted-foreground/10 text-muted-foreground text-[10px] px-1 rounded">
-                      {block.text.length}
+                {blocks.map((block, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className={`${
+                        COLORS[index % COLORS.length]
+                      } px-1.5 py-0.5 rounded mx-0.5 inline-block cursor-pointer 
+                      transition-opacity hover:opacity-80 relative group`}
+                      onMouseEnter={() => handleChunkHover(index)}
+                      onMouseLeave={() => handleChunkHover(null)}
+                    >
+                      <span className="absolute -top-2 -right-1 bg-muted-foreground/10 text-muted-foreground text-[10px] px-1 rounded">
+                        {block.text.length}
+                      </span>
+                      <>
+                        {block.overlapText && (
+                          <span className="inline-block px-1 -ml-1 border-x-2 border-dashed border-black/20 bg-black/5 rounded-l rounded-r font-medium">
+                            {block.overlapText}
+                          </span>
+                        )}
+                        {block.text.slice(block.overlapText?.length || 0)}
+                      </>
                     </span>
-                    {block.text}
-                  </span>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -25,11 +25,14 @@ export function SeparatorManager({ separators }: SeparatorManagerProps) {
               <TooltipContent>
                 <p>
                   Custom separators to use for text splitting.
-                  <br />
-                  <span className="font-mono">¶ means \n</span>
-                  <br />
-                  <span className="font-mono">␣ means space</span>
                 </p>
+                <p className="mb-2">
+                  Split paragraphs in order by using separators and merge
+                  smaller chunks according to the overlap size.
+                </p>
+                <span className="font-mono">¶ means line break</span>
+                <br />
+                <span className="font-mono">␣ means space</span>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
