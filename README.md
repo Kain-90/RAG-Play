@@ -86,7 +86,6 @@ src/
   - [x] Support multiple splitting strategies (character, recursive character)
   - [x] Enable real-time preview of splitting results
   - [ ] Add custom delimiter-based splitting
-  - [ ] Implement markdown-aware splitting
 - [x] Embedding tab
   - [x] Basic vector similarity visualization
   - [x] Real-time similarity score display

@@ -22,7 +22,7 @@ export const useTextSplittingStore = create<TextSplittingState>((set) => ({
   blocks: [],
   strategy: "recursive-character",
   chunkSize: 500,
-  overlap: 0,
+  overlap: 50,
   setText: (text) => set({ text }),
   setBlocks: (blocks) => set({ blocks }),
   setStrategy: (strategy) => set({ strategy }),
