@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@ai-sdk/groq": "^1.0.4",
