@@ -124,7 +124,7 @@ export function EmbeddingTab() {
       }));
     }
     return [];
-  }, [questionEmbedding, blocksEmbedding]);
+  }, [question, questionEmbedding, blocksEmbedding]);
 
   useEffect(() => {
     if (question.trim()) {
@@ -133,12 +133,7 @@ export function EmbeddingTab() {
       console.log("Resetting similarity and question embedding");
       setQuestionEmbedding([]);
     }
-  }, [
-    question,
-    model,
-    debouncedGetEmbedding,
-    setQuestionEmbedding,
-  ]);
+  }, [question, model, debouncedGetEmbedding, setQuestionEmbedding]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

@@ -198,7 +198,7 @@ export function GenerationTab() {
           <section className="space-y-2" aria-label="Generated Answer Section">
             <label className="text-sm font-medium">Model Response:</label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
-              <ScrollArea className="p-4">
+              <ScrollArea className="p-4 h-full">
                 {messages.length > 0 ? (
                   <div className="flex flex-col gap-4">
                     {messages.length > 1 && (

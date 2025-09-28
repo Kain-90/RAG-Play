@@ -1,8 +1,30 @@
-export type SplitStrategy = "recursive-character" | "character";
+export type SplitStrategy =
+  | "recursive-character"
+  | "character"
+  | "parent-child";
 
-export const SplitStrategyList = [
-  { character: "Fixed Character" },
-  { "recursive-character": "Recursive Character" },
+export interface SplitStrategyItem {
+  key: SplitStrategy;
+  value: string;
+  disabled: boolean;
+}
+
+export const SplitStrategyList: SplitStrategyItem[] = [
+  {
+    key: "character",
+    value: "Fixed Character",
+    disabled: false,
+  },
+  {
+    key: "recursive-character",
+    value: "Recursive Character",
+    disabled: false,
+  },
+  {
+    key: "parent-child",
+    value: "Parent-Child (Coming Soon)",
+    disabled: true,
+  },
 ];
 
 export interface TextBlock {
