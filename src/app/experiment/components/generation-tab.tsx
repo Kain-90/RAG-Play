@@ -25,12 +25,34 @@ import {
 import { Input } from "@/components/ui/input";
 
 export function GenerationTab() {
-  const { blocks } = useTextSplittingStore();
+  const { blocks, strategy } = useTextSplittingStore();
   const { similarities, question } = useEmbeddingStore();
   const { messages, append, isLoading, setMessages} = useChat();
-  const topSimilarBlocks = similarities
-    .slice(0, 3)
-    .map(({ index }) => blocks[index].text);
+  
+  // For parent-child strategy, use parent chunks as context (deduplicated)
+  const topSimilarBlocks = (() => {
+    if (strategy === "parent-child") {
+      const topSimilarities = similarities.slice(0, 3);
+      const parentChunksMap = new Map<number, string>();
+      
+      // Collect parent chunks in order of first appearance
+      topSimilarities.forEach(({ index }) => {
+        const block = blocks[index];
+        if (block.parentId !== undefined && block.parentText) {
+          if (!parentChunksMap.has(block.parentId)) {
+            parentChunksMap.set(block.parentId, block.parentText);
+          }
+        }
+      });
+      
+      return Array.from(parentChunksMap.values());
+    } else {
+      return similarities
+        .slice(0, 3)
+        .map(({ index }) => blocks[index].text);
+    }
+  })();
+  
   const [systemMessage, setSystemMessage] = useState(SYSTEM_PROMPT_TEMPLATE(topSimilarBlocks.join("\n\n")));
   const [userMessage, setUserMessage] = useState(USER_PROMPT_TEMPLATE(question || ""));
   const [temperature, setTemperature] = useState(0.3);
@@ -63,6 +85,11 @@ export function GenerationTab() {
             <CardTitle>Response Generation</CardTitle>
             <CardDescription>
               Observe how LLMs combine retrieved context with user queries to generate accurate, contextual responses
+              {strategy === "parent-child" && topSimilarBlocks.length > 0 && (
+                <span className="block mt-2 px-2 py-1 rounded bg-purple-50 text-purple-700 text-xs">
+                  Using parent chunks as context for richer information retrieval
+                </span>
+              )}
             </CardDescription>
           </div>
           <Button

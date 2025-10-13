@@ -22,8 +22,8 @@ export const SplitStrategyList: SplitStrategyItem[] = [
   },
   {
     key: "parent-child",
-    value: "Parent-Child (Coming Soon)",
-    disabled: true,
+    value: "Parent-Child",
+    disabled: false,
   },
 ];
 
@@ -35,6 +35,9 @@ export interface EnhancedTextBlock extends TextBlock {
   startIndex: number;
   endIndex: number;
   overlapText?: string;
+  parentId?: number;
+  isParent?: boolean;
+  parentText?: string;
 }
 
 export interface Separator {

@@ -85,6 +85,7 @@ src/
   - [x] Add configurable chunk size and overlap settings
   - [x] Support multiple splitting strategies (character, recursive character)
   - [x] Enable real-time preview of splitting results
+  - [x] Support parent-child splitting strategy
   - [ ] Add custom delimiter-based splitting
 - [x] Embedding tab
   - [x] Basic vector similarity visualization

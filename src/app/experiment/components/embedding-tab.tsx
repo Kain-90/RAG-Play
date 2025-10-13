@@ -35,7 +35,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { embedTo2D } from "@/lib/utils";
 
 export function EmbeddingTab() {
-  const { blocks } = useTextSplittingStore();
+  const { blocks, strategy } = useTextSplittingStore();
   const {
     similarities,
     questionEmbedding,
@@ -442,7 +442,7 @@ export function EmbeddingTab() {
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
                 <div className="space-y-4">
-                  {blocks.map((block, index) => (
+                    {blocks.map((block, index) => (
                     <div
                       key={index}
                       className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
@@ -450,6 +450,11 @@ export function EmbeddingTab() {
                       <p className="text-sm">{block.text}</p>
                       <p className="text-xs text-muted-foreground mt-1">
                         Chunk {index + 1} • {block.text.length} characters
+                        {strategy === "parent-child" && block.parentId !== undefined && (
+                          <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
+                            Child of Parent {block.parentId + 1}
+                          </span>
+                        )}
                       </p>
                     </div>
                   ))}
@@ -520,6 +525,11 @@ export function EmbeddingTab() {
                         <p className="text-xs text-muted-foreground mt-1">
                           Chunk {index + 1} • Similarity:{" "}
                           {similarity.toFixed(4)}
+                          {strategy === "parent-child" && blocks[index].parentId !== undefined && (
+                            <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
+                              Child of Parent {blocks[index].parentId + 1}
+                            </span>
+                          )}
                         </p>
                       </div>
                     ))}
