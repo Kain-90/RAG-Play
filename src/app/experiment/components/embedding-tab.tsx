@@ -91,6 +91,14 @@ export function EmbeddingTab() {
             .filter((block) => block.length > 0);
         }
 
+        // Validate if there's enough data
+        if (textBlocks.length === 0) {
+          console.log("No text blocks to embed");
+          setBlocksEmbedding([]);
+          setLoadingState({ status: "idle" });
+          return;
+        }
+
         const message: EmbeddingTaskMessage = {
           task: "feature-extraction",
           model,
@@ -112,16 +120,30 @@ export function EmbeddingTab() {
 
   const embedding2d = useMemo(() => {
     if (blocksEmbedding.length > 0 && questionEmbedding.length > 0) {
-      const finalEmbedding = [
-        questionEmbedding[0],
-        ...blocksEmbedding.map((embedding) => embedding[0]),
-      ];
-      const embedding2d = embedTo2D(finalEmbedding);
-      return embedding2d.map((point, index) => ({
-        ...point,
-        title: index === 0 ? question.slice(0, 30) : `Chunk ${index}`,
-        // details: index === 0 ? [] : []
-      }));
+      try {
+        const finalEmbedding = [
+          questionEmbedding[0],
+          ...blocksEmbedding.map((embedding) => embedding[0]),
+        ];
+
+        // Check if there's enough data for UMAP (minimum 3 points for nNeighbors=15)
+        if (finalEmbedding.length < 3) {
+          console.log(
+            `Not enough data points for UMAP visualization (${finalEmbedding.length} points). Need at least 3 points.`
+          );
+          return [];
+        }
+
+        const embedding2d = embedTo2D(finalEmbedding);
+        return embedding2d.map((point, index) => ({
+          ...point,
+          title: index === 0 ? question.slice(0, 30) : `Chunk ${index}`,
+          // details: index === 0 ? [] : []
+        }));
+      } catch (error) {
+        console.error("Error creating 2D embeddings:", error);
+        return [];
+      }
     }
     return [];
   }, [question, questionEmbedding, blocksEmbedding]);
@@ -441,24 +463,31 @@ export function EmbeddingTab() {
             <label className="text-sm font-medium">Chunks:</label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
-                <div className="space-y-4">
+                {blocks.length > 0 ? (
+                  <div className="space-y-4">
                     {blocks.map((block, index) => (
-                    <div
-                      key={index}
-                      className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
-                    >
-                      <p className="text-sm">{block.text}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Chunk {index + 1} • {block.text.length} characters
-                        {strategy === "parent-child" && block.parentId !== undefined && (
-                          <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
-                            Child of Parent {block.parentId + 1}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                      <div
+                        key={index}
+                        className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
+                      >
+                        <p className="text-sm">{block.text}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Chunk {index + 1} • {block.text.length} characters
+                          {strategy === "parent-child" &&
+                            block.parentId !== undefined && (
+                              <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
+                                Child of Parent {block.parentId + 1}
+                              </span>
+                            )}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    Add text in the Text Splitting tab first.
+                  </div>
+                )}
               </ScrollArea>
             </div>
           </div>
@@ -514,29 +543,35 @@ export function EmbeddingTab() {
             <label className="text-sm font-medium">Similar Chunks:</label>
             <div className="h-[600px] rounded-lg border-2 border-dashed border-muted-foreground/25">
               <ScrollArea className="h-full p-4">
-                {similarities.length > 0 ? (
+                {similarities.length > 0 && blocks.length > 0 ? (
                   <div className="space-y-2">
-                    {similarities.slice(0, 10).map(({ index, similarity }) => (
-                      <div
-                        key={index}
-                        className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
-                      >
-                        <p className="text-sm">{blocks[index].text}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Chunk {index + 1} • Similarity:{" "}
-                          {similarity.toFixed(4)}
-                          {strategy === "parent-child" && blocks[index].parentId !== undefined && (
-                            <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
-                              Child of Parent {blocks[index].parentId + 1}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    ))}
+                    {similarities
+                      .slice(0, 10)
+                      .filter(({ index }) => index < blocks.length && blocks[index])
+                      .map(({ index, similarity }) => (
+                        <div
+                          key={index}
+                          className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
+                        >
+                          <p className="text-sm">{blocks[index].text}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Chunk {index + 1} • Similarity:{" "}
+                            {similarity.toFixed(4)}
+                            {strategy === "parent-child" &&
+                              blocks[index].parentId !== undefined && (
+                                <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
+                                  Child of Parent {blocks[index].parentId + 1}
+                                </span>
+                              )}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    Ask a question to see similar chunks
+                    {blocks.length === 0
+                      ? "No chunks available."
+                      : "Ask a question to see similar chunks"}
                   </div>
                 )}
               </ScrollArea>

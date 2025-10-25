@@ -24,6 +24,13 @@ export const splitText = async (
   }
 ): Promise<SplitTextResult> => {
   try {
+    // Validate input text
+    if (!text || text.trim().length === 0) {
+      return {
+        blocks: [],
+      };
+    }
+
     let splitter;
     switch (strategy) {
       case "character":

@@ -133,7 +133,7 @@ export const GeneratedChunks = () => {
       });
       setBlocks(updatedBlocks);
     } catch (error) {
-      toast.error("Error splitting text");
+      toast.error("Error splitting text: " + error);
       console.error("Error splitting text:", error);
       setBlocks([]);
     }
