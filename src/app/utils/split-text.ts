@@ -8,6 +8,29 @@ import {
   RecursiveCharacterTextSplitter,
 } from "@langchain/textsplitters";
 
+const DEFAULT_PARENT_SIZE_MULTIPLIER = 2;
+
+class SplitError extends Error {
+  constructor(message: string, public code: string) {
+    super(message);
+    this.name = "SplitError";
+  }
+}
+
+function getSeparatorList(separators: Separator | Separator[]): string[] {
+  if (Array.isArray(separators)) {
+    return separators.map((sep) => sep.char);
+  }
+  return [separators.char];
+}
+
+function getFirstSeparator(separators: Separator | Separator[]): string {
+  if (Array.isArray(separators)) {
+    return separators[0].char;
+  }
+  return separators.char;
+}
+
 type SplitTextResult = {
   blocks: EnhancedTextBlock[];
   error?: Error;
@@ -24,91 +47,79 @@ export const splitText = async (
   }
 ): Promise<SplitTextResult> => {
   try {
-    // Validate input text
     if (!text || text.trim().length === 0) {
-      return {
-        blocks: [],
-      };
+      return { blocks: [] };
     }
+
+    const separatorList = getSeparatorList(options.separators);
+    const splitterConfig = {
+      chunkSize: options.chunkSize,
+      chunkOverlap: options.overlap,
+    };
 
     let splitter;
     switch (strategy) {
       case "character":
         splitter = new CharacterTextSplitter({
-          chunkSize: options.chunkSize,
-          chunkOverlap: options.overlap,
-          separator: Array.isArray(options.separators)
-            ? options.separators[0].char
-            : options.separators.char,
+          ...splitterConfig,
+          separator: getFirstSeparator(options.separators),
         });
         break;
       case "recursive-character":
         splitter = new RecursiveCharacterTextSplitter({
-          chunkSize: options.chunkSize,
-          chunkOverlap: options.overlap,
-          separators: Array.isArray(options.separators)
-            ? options.separators.map((sep) => sep.char)
-            : [options.separators.char],
+          ...splitterConfig,
+          separators: separatorList,
         });
         break;
-      case "parent-child":
-        const parentChunkSize = options.parentChunkSize || options.chunkSize * 2;
-        const separatorList = Array.isArray(options.separators)
-          ? options.separators.map((sep) => sep.char)
-          : [options.separators.char];
-  
-        // First pass: Split into parent chunks
+      case "parent-child": {
+        const parentChunkSize =
+          options.parentChunkSize || options.chunkSize * DEFAULT_PARENT_SIZE_MULTIPLIER;
+
         const parentSplitter = new RecursiveCharacterTextSplitter({
           chunkSize: parentChunkSize,
           chunkOverlap: 0,
           separators: separatorList,
         });
-  
+
         const parentChunks = await parentSplitter.splitText(text);
-        
-        // Second pass: Split each parent into child chunks
+
         const allChildBlocks: EnhancedTextBlock[] = [];
-        let textOffset = 0;
-  
+        const parentStartIndexMap = new Map<number, number>();
+
         for (let parentIndex = 0; parentIndex < parentChunks.length; parentIndex++) {
           const parentText = parentChunks[parentIndex];
-          const parentStartIndex = text.indexOf(parentText, textOffset);
-          
-          // Create child splitter for this parent
+          const parentStartIndex = text.indexOf(parentText, parentIndex === 0 ? 0 : parentStartIndexMap.get(parentIndex - 1) ?? 0);
+          parentStartIndexMap.set(parentIndex, parentStartIndex);
+
           const childSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: options.chunkSize,
-            chunkOverlap: options.overlap, // Overlap only between children within same parent
+            chunkOverlap: options.overlap,
             separators: separatorList,
           });
-  
-          const childChunks = await childSplitter.splitText(parentText);
-          let childOffset = 0;
-  
-        // Convert child chunks to EnhancedTextBlock
-        for (const childText of childChunks) {
-          const relativeStartIndex = parentText.indexOf(childText, childOffset);
-          const absoluteStartIndex = parentStartIndex + relativeStartIndex;
-          const absoluteEndIndex = absoluteStartIndex + childText.length;
-          
-          allChildBlocks.push({
-            text: childText,
-            startIndex: absoluteStartIndex,
-            endIndex: absoluteEndIndex,
-            parentId: parentIndex,
-            parentText: parentText,
-          });
 
-          childOffset = relativeStartIndex + 1;
+          const childChunks = await childSplitter.splitText(parentText);
+
+          for (const childText of childChunks) {
+            const relativeStartIndex = parentText.indexOf(childText);
+            const absoluteStartIndex = parentStartIndex + relativeStartIndex;
+            const absoluteEndIndex = absoluteStartIndex + childText.length;
+
+            allChildBlocks.push({
+              text: childText,
+              startIndex: absoluteStartIndex,
+              endIndex: absoluteEndIndex,
+              parentId: parentIndex,
+              parentText,
+            });
+          }
         }
-  
-          textOffset = parentStartIndex + 1;
-        }
-  
+
         return { blocks: allChildBlocks };
+      }
       default:
         return {
           blocks: [],
-          error: new Error("Invalid split strategy"),
+          error: new SplitError("Invalid split strategy", "INVALID_STRATEGY"),
         };
     }
 

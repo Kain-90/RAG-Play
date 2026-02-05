@@ -6,29 +6,17 @@ import {
   LineElement,
   Tooltip,
   Legend,
-  ChartOptions,
   Title,
   Plugin,
+  ChartOptions,
+  TooltipItem,
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { cn } from "@/lib/utils";
-
-interface Vector {
-  x: number;
-  y: number;
-  title?: string;
-  details?: string[];
-  distance?: number;
-}
-
-interface LowVectorVisualizationProps {
-  data: Vector[];
-  query?: Vector;
-  title?: string;
-  datasetLabel?: string;
-  queryLabel?: string;
-  className?: string;
-}
+import {
+  Vector,
+  LowVectorVisualizationProps,
+} from "@/app/experiment/types/chart";
 
 const nearestNeighborsPlugin: Plugin<"scatter"> = {
   id: "nearestNeighbors",
@@ -38,7 +26,6 @@ const nearestNeighborsPlugin: Plugin<"scatter"> = {
     const vectorsDataset = chart.data.datasets[0];
 
     if (!queryDataset?.data[0] || !vectorsDataset?.data.length) {
-      console.log("No data found for drawing lines");
       return;
     }
 
@@ -153,7 +140,7 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
       },
       tooltip: {
         callbacks: {
-          label: (context) => {
+          label: (context: TooltipItem<"scatter">) => {
             const point = context.raw as Vector;
             const lines: string[] = [];
 

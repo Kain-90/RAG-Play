@@ -86,16 +86,7 @@ self.addEventListener(
         throw new Error(`Invalid task: ${event.data.task}`);
       }
 
-      // Early return for empty input
-      if (!event.data.text || event.data.text.length === 0) {
-        self.postMessage({
-          status: "complete",
-          type: event.data.type,
-          output: [],
-        } as EmbeddingProgressMessage);
-        return;
-      }
-
+      // Load model first (so "ready" is sent); then for empty input just respond with empty output
       const task = await PipelineSingleton.getInstance(
         (x: EmbeddingProgressMessage) => {
           self.postMessage(x);
@@ -104,6 +95,15 @@ self.addEventListener(
 
       if (!task) {
         throw new Error("Failed to initialize pipeline");
+      }
+
+      if (!event.data.text || event.data.text.length === 0) {
+        self.postMessage({
+          status: "complete",
+          type: event.data.type,
+          output: [],
+        } as EmbeddingProgressMessage);
+        return;
       }
 
       const output: Tensor | Tensor[] = Array.isArray(event.data.text)
