@@ -3,6 +3,7 @@ import Link from "next/link";
 
 export function Footer() {
   const githubUrl = "https://github.com/Kain-90/RAG-Play";
+  const myUrl = "https://kainhub.vercel.app";
   return (
     <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,7 +12,7 @@ export function Footer() {
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
               Built by{" "}
               <Link
-                href="https://kainhub.com"
+                href={myUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="font-medium underline underline-offset-4 hover:text-primary"
