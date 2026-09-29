@@ -135,9 +135,12 @@ Husky runs `npm run lint` automatically before each commit.
 
 ## Environment Variables
 
-Required:
-- `GROQ_API_KEY` - API key for Groq LLM
-- `GROQ_MODEL` - Model identifier (e.g., "llama-3.1-70b-versatile")
+LLM provider (resolved in `src/lib/llm.ts`):
+- `LLM_PROVIDER` - `groq` | `mistral` (default `groq`); switch providers without code changes
+- `GROQ_API_KEY` / `GROQ_MODEL` - Groq credentials; model defaults to `openai/gpt-oss-20b`
+- `MISTRAL_API_KEY` / `MISTRAL_MODEL` - Mistral credentials; model defaults to `ministral-14b-latest`
+
+Only the active provider's API key is required.
 
 Optional:
 - `GOOGLE_SITE_VERIFICATION_ID` - For SEO verification
@@ -158,7 +161,7 @@ Optional:
 - `@huggingface/transformers` - ML embeddings
 - `langchain` - Text processing
 - `umap-js` - Dimensionality reduction
-- `ai` / `@ai-sdk/groq` - LLM integration
+- `ai` / `@ai-sdk/groq` / `@ai-sdk/mistral` - LLM integration
 - `zustand` - State management
 - `tailwindcss-animate` - Animations
 - `sonner` - Toast notifications
