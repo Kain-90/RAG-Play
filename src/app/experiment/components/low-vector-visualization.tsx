@@ -84,6 +84,7 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
   datasetLabel = "Vectors",
   queryLabel = "Query",
   className,
+  onPointClick,
 }) => {
   const chartData = useMemo(() => {
     const datasets = [
@@ -130,13 +131,30 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
   } = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: (_event, elements) => {
+      const dataPoint = elements.find((element) => element.datasetIndex === 0);
+      if (!dataPoint || !onPointClick) {
+        return;
+      }
+      onPointClick(dataPoint.index);
+    },
+    onHover: (event, elements) => {
+      const canvas = event.native?.target;
+      if (!(canvas instanceof HTMLElement)) {
+        return;
+      }
+      const isOverDataPoint =
+        Boolean(onPointClick) &&
+        elements.some((element) => element.datasetIndex === 0);
+      canvas.style.cursor = isOverDataPoint ? "pointer" : "default";
+    },
     plugins: {
       legend: {
         position: "top" as const,
       },
+      // Title renders outside the canvas so it aligns with sibling headings.
       title: {
-        display: true,
-        text: title,
+        display: false,
       },
       tooltip: {
         callbacks: {

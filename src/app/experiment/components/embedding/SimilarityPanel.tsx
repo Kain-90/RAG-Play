@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EnhancedTextBlock } from "@/app/experiment/types/text-splitting";
 import { EMBEDDING_CONSTANTS } from "@/app/hooks";
+import { cn } from "@/lib/utils";
 
 interface SimilarityResult {
   index: number;
@@ -11,12 +12,16 @@ interface SimilarityPanelProps {
   similarities: SimilarityResult[];
   blocks: EnhancedTextBlock[];
   isLoading: boolean;
+  highlightedIndex?: number | null;
+  getChunkElementId?: (index: number) => string;
 }
 
 export function SimilarityPanel({
   similarities,
   blocks,
   isLoading,
+  highlightedIndex = null,
+  getChunkElementId,
 }: SimilarityPanelProps) {
   return (
     <div className="space-y-2">
@@ -38,7 +43,11 @@ export function SimilarityPanel({
                 .map(({ index, similarity }) => (
                   <div
                     key={index}
-                    className="p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition-colors"
+                    id={getChunkElementId?.(index)}
+                    className={cn(
+                      "p-3 rounded-md bg-muted/50 hover:bg-muted/80 transition",
+                      highlightedIndex === index && "ring-2 ring-inset ring-primary/60"
+                    )}
                   >
                     <p className="text-sm">{blocks[index].text}</p>
                     <p className="text-xs text-muted-foreground mt-1">

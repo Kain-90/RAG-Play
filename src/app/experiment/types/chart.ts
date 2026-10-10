@@ -15,6 +15,8 @@ export interface LowVectorVisualizationProps {
   datasetLabel?: string;
   queryLabel?: string;
   className?: string;
+  /** Called with the index into `data` when a data point (not the query) is clicked. */
+  onPointClick?: (index: number) => void;
 }
 
 export interface NearestNeighborsPluginOptions {
