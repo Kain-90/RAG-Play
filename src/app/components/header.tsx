@@ -22,7 +22,7 @@ export function Header() {
           target="_blank"
           rel="noopener nofollow"
           className="flex items-center space-x-2 text-foreground/60 hover:text-foreground transition-colors"
-          aria-label="View source on GitHub"
+          aria-label="View on GitHub"
         >
           <Github className="h-6 w-6" />
         </Link>

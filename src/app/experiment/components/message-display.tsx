@@ -122,7 +122,7 @@ export const MessageDisplay = ({
             onClick={handleEdit}
             className="px-3 py-1 h-7 text-xs hover:bg-muted"
           >
-            Edit Message
+            Edit
           </Button>
         )}
       </div>
@@ -141,7 +141,7 @@ export const MessageDisplay = ({
               onChange={(e) => setEditedMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full min-h-[100px] max-h-[400px] p-2 rounded-md bg-background resize-y focus:outline-none"
-              placeholder="Edit message..."
+              placeholder="Type a message…"
             />
             <div className="flex gap-2 justify-end pt-2 border-t">
               <Button
@@ -157,7 +157,7 @@ export const MessageDisplay = ({
                 onClick={handleSave}
                 className="px-3 py-1 h-7 text-xs"
               >
-                Save Changes
+                Save
               </Button>
             </div>
           </div>
@@ -178,10 +178,10 @@ export const MessageDisplay = ({
                   aria-controls={thinkingPanelId}
                   aria-label={
                     isThinkingBlockStreaming
-                      ? "Thinking in progress"
+                      ? "Model is thinking"
                       : isThinkingExpanded
-                        ? "Hide thinking details"
-                        : "View thinking details"
+                        ? "Hide thinking"
+                        : "Show thinking"
                   }
                 >
                   {isThinkingExpanded ? (
@@ -196,11 +196,11 @@ export const MessageDisplay = ({
                     />
                   )}
                   {isThinkingBlockStreaming ? (
-                    <span>Thinking...</span>
+                    <span>Thinking…</span>
                   ) : isThinkingExpanded ? (
-                    <span>Hide thinking details</span>
+                    <span>Hide thinking</span>
                   ) : (
-                    <span>View thinking details</span>
+                    <span>Show thinking</span>
                   )}
                 </button>
                 {isThinkingExpanded ? (
@@ -211,7 +211,7 @@ export const MessageDisplay = ({
                     {parsedThinking.thinkingContent.length > 0 ? (
                       parsedThinking.thinkingContent
                     ) : (
-                      <span className="italic">No thinking content yet</span>
+                      <span className="italic">Nothing yet.</span>
                     )}
                   </div>
                 ) : null}

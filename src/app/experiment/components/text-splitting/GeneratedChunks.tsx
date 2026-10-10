@@ -126,7 +126,7 @@ export const GeneratedChunks = () => {
       });
       setBlocks(updatedBlocks);
     } catch (error) {
-      toast.error("Error splitting text: " + error);
+      toast.error("Couldn't split this text. " + error);
       console.error("Error splitting text:", error);
       setBlocks([]);
     }
@@ -177,9 +177,9 @@ export const GeneratedChunks = () => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">Generated Chunks</label>
+        <label className="text-sm font-medium">Split Result</label>
         <div className="text-xs text-muted-foreground">
-          Hover over chunks to highlight their position in the source document
+          Hover a chunk to find it in your text.
         </div>
       </div>
       <div className="max-h-screen rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 p-4 overflow-y-auto">
@@ -188,7 +188,7 @@ export const GeneratedChunks = () => {
             <>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
                 <span className="text-xs font-medium text-muted-foreground">
-                  Parents:
+                  Parents
                 </span>
                 <span className="text-sm font-semibold">
                   {parentChildStats.parentCount}
@@ -196,20 +196,20 @@ export const GeneratedChunks = () => {
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
                 <span className="text-xs font-medium text-muted-foreground">
-                  Children:
+                  Children
                 </span>
                 <span className="text-sm font-semibold">
                   {parentChildStats.childCount}
                 </span>
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Avg. Children:</span>
+                <span className="text-xs font-medium">Children per Parent</span>
                 <span className="text-sm font-semibold">
                   {parentChildStats.avgChildrenPerParent}
                 </span>
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Avg. Overlap:</span>
+                <span className="text-xs font-medium">Avg. Overlap</span>
                 <span className="text-sm font-semibold">
                   {overlapStats.average} chars
                 </span>
@@ -219,13 +219,13 @@ export const GeneratedChunks = () => {
             <>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
                 <span className="text-xs font-medium text-muted-foreground">
-                  Chunks:
+                  Chunks
                 </span>
                 <span className="text-sm font-semibold">{blocks.length}</span>
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
                 <span className="text-xs font-medium text-muted-foreground">
-                  Avg. Size:
+                  Avg. Size
                 </span>
                 <span className="text-sm font-semibold">
                   {blocks.length > 0
@@ -240,13 +240,13 @@ export const GeneratedChunks = () => {
                 </span>
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">With Overlap:</span>
+                <span className="text-xs font-medium">Overlapping</span>
                 <span className="text-sm font-semibold">
                   {overlapStats.total}
                 </span>
               </div>
               <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Avg. Overlap:</span>
+                <span className="text-xs font-medium">Avg. Overlap</span>
                 <span className="text-sm font-semibold">
                   {overlapStats.average} chars
                 </span>

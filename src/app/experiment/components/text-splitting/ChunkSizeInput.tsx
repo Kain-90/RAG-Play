@@ -33,14 +33,14 @@ export const ChunkSizeInput = () => {
       {strategy === "parent-child" && (
         <>
           <label className="text-sm font-medium flex items-center gap-2">
-            Parent Chunk Size:
+            Parent Chunk Size
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Maximum number of characters in each parent chunk.</p>
+                  <p>Max characters per parent chunk.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -56,7 +56,7 @@ export const ChunkSizeInput = () => {
         </>
       )}
       <label className="text-sm font-medium flex items-center gap-2">
-        {strategy === "parent-child" ? "Child Chunk Size:" : "Chunk Size:"}
+        {strategy === "parent-child" ? "Child Chunk Size" : "Chunk Size"}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -64,8 +64,8 @@ export const ChunkSizeInput = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                Maximum number of characters in each chunk. Larger chunks
-                preserve more context but may exceed token limits.
+                Max characters per chunk. Bigger keeps more context but uses
+                more tokens.
               </p>
             </TooltipContent>
           </Tooltip>

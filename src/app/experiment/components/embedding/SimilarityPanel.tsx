@@ -20,7 +20,7 @@ export function SimilarityPanel({
 }: SimilarityPanelProps) {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">Similar Chunks:</label>
+      <label className="text-sm font-medium">Top Matches</label>
       <div
         className="rounded-lg border-2 border-dashed border-muted-foreground/25"
         style={{ height: EMBEDDING_CONSTANTS.CHUNK_LIST_HEIGHT }}
@@ -28,7 +28,7 @@ export function SimilarityPanel({
         <ScrollArea className="h-full p-4">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
-              Embedding... {/* Progress handled by parent */}
+              Searching… {/* Progress handled by parent */}
             </div>
           ) : similarities.length > 0 && blocks.length > 0 ? (
             <div className="space-y-2">
@@ -42,7 +42,7 @@ export function SimilarityPanel({
                   >
                     <p className="text-sm">{blocks[index].text}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Chunk {index + 1} • Similarity: {similarity.toFixed(4)}
+                      Chunk {index + 1} · Similarity {similarity.toFixed(4)}
                     </p>
                   </div>
                 ))}
@@ -50,8 +50,8 @@ export function SimilarityPanel({
           ) : (
             <div className="flex items-center justify-center h-full text-muted-foreground">
               {blocks.length === 0
-                ? "No chunks available."
-                : "Ask a question to see similar chunks"}
+                ? "No chunks yet. Add text in Text Splitting."
+                : "Ask a question to see matches."}
             </div>
           )}
         </ScrollArea>

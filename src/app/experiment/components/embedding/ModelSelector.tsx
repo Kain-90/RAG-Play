@@ -19,7 +19,7 @@ interface ModelSelectorProps {
 export function ModelSelector({ model, onModelChange }: ModelSelectorProps) {
   return (
     <div className="flex items-center space-x-4">
-      <span className="text-sm font-medium">Embedding Model:</span>
+      <span className="text-sm font-medium">Embedding Model</span>
       <Select value={model} onValueChange={(value) => onModelChange(value as EmbeddingModel)}>
         <SelectTrigger
           className="w-[400px]"

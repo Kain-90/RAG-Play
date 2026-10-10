@@ -12,7 +12,7 @@ export default function ExperimentPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">RAG Playground</h1>
             <p className="text-muted-foreground">
-              Explore each step of the RAG pipeline through interactive visualizations
+              Explore each RAG step in order. Each tab feeds the next.
             </p>
           </div>
           <Suspense fallback={null}>

@@ -80,7 +80,7 @@ ChartJS.register(
 const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
   data,
   query,
-  title = "Low Vector Visualization",
+  title = "Vector Map",
   datasetLabel = "Vectors",
   queryLabel = "Query",
   className,

@@ -51,28 +51,28 @@ const features = [
   {
     title: "Text Splitting",
     description:
-      "Visualize how documents are split into meaningful chunks while preserving semantic coherence and context",
+      "See how documents are split into chunks that keep their meaning.",
     icon: <SplitSquareHorizontal className="h-6 w-6 text-primary" />,
     href: "/experiment?step=text-splitting",
   },
   {
     title: "Vector Embedding",
     description: 
-      "See how text is transformed into numerical vectors and visualize their relationships in high-dimensional space",
+      "See how text becomes vectors, and which chunks land close together in vector space.",
     icon: <Boxes className="h-6 w-6 text-primary" />,
     href: "/experiment?step=embedding",
   },
   {
     title: "Semantic Search",
     description: 
-      "Experience real-time vector similarity search and understand how relevant context is retrieved from your knowledge base",
+      "Run a vector similarity search and see which chunks are retrieved from your knowledge base.",
     icon: <Search className="h-6 w-6 text-primary" />,
     href: "/experiment?step=semantic-search",
   },
   {
     title: "Context Generation",
     description: 
-      "Watch how the LLM combines retrieved context with user queries to generate accurate, contextual responses",
+      "Watch the LLM combine retrieved context with your question to write an answer.",
     icon: <MessageSquare className="h-6 w-6 text-primary" />,
     href: "/experiment?step=generation",
   },

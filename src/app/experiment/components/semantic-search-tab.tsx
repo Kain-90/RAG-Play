@@ -58,8 +58,7 @@ export function SemanticSearchTab({
       <CardHeader>
         <CardTitle>Semantic Search</CardTitle>
         <CardDescription>
-          Embed a user query, compare it against the knowledge-base vectors, and
-          inspect the chunks selected for retrieval.
+          Ask a question. We turn it into a vector and find the closest chunks.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -75,7 +74,7 @@ export function SemanticSearchTab({
               <LowVectorVisualization
                 data={embedding2d.slice(1)}
                 query={embedding2d[0]}
-                title="Query Similarity"
+                title="Question vs. Chunks"
                 datasetLabel="Chunks"
                 queryLabel="Question"
                 className="h-[400px]"
@@ -84,13 +83,12 @@ export function SemanticSearchTab({
 
             <div className="space-y-2 rounded-lg border border-border bg-muted/50 p-4 text-sm text-muted-foreground lg:w-1/2">
               <p>
-                The query is embedded with the same model as the knowledge-base
-                chunks, then ranked by vector similarity.
+                Your question uses the same model as the chunks, so they can be
+                compared.
               </p>
               <p>
-                This separates indexing from retrieval: chunk embeddings are
-                prepared first, while query embedding and similarity scoring
-                happen when a question is asked.
+                Chunks are embedded once ahead of time. Your question is
+                embedded each time you ask.
               </p>
             </div>
           </div>

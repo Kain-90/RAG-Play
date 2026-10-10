@@ -31,17 +31,17 @@ export const SourceDocumentInput = () => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">Source Document</label>
+        <label className="text-sm font-medium">Your Text</label>
         <div className="text-xs text-muted-foreground">
-          Sample text from{" "}
+          Sample from{" "}
           <a
             href="https://aws.amazon.com/what-is/retrieval-augmented-generation/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-primary transition-colors"
-            title="AWS RAG Documentation"
+            title="Open AWS article"
           >
-            AWS Documentation
+            AWS docs
           </a>
         </div>
       </div>
@@ -50,7 +50,7 @@ export const SourceDocumentInput = () => {
         value={getHighlightedText()}
         onChange={handleTextChange}
         className="min-h-screen resize-y border-2 border-dashed border-muted-foreground/25 focus-visible:ring-1 font-mono"
-        placeholder="Enter text to split here..."
+        placeholder="Paste or type text to split…"
       />
     </div>
   );

@@ -45,8 +45,8 @@ export const StrategySelector = () => {
       >
         <Image
           src={Langchain}
-          alt="Langchain"
-          title="Langchain text splitters"
+          alt="LangChain"
+          title="LangChain Splitter Docs"
           className="w-8 h-8"
         />
       </Link>

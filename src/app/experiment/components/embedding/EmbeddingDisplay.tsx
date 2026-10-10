@@ -15,14 +15,14 @@ export function EmbeddingDisplay({
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">
-        Ask a question to find similar content:
+        Your Question
       </label>
       <Textarea
         value={question}
         onChange={(e) => onQuestionChange(e.target.value)}
         className="min-h-[80px]"
         style={{ minHeight: EMBEDDING_CONSTANTS.MIN_INPUT_HEIGHT }}
-        placeholder="Enter your question here..."
+        placeholder="e.g. What is RAG?"
       />
       {questionEmbedding.length > 0 && (
         <div className="mt-4 p-3 rounded-md bg-muted/50">
@@ -36,7 +36,7 @@ export function EmbeddingDisplay({
               ...]
             </p>
             <p className="text-xs text-muted-foreground">
-              Question embedding • {questionEmbedding[0].length} dimensions
+              Question vector · {questionEmbedding[0].length} dimensions
             </p>
           </div>
         </div>

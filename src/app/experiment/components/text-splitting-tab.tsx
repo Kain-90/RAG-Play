@@ -18,55 +18,42 @@ export function TextSplittingTab() {
       <CardHeader>
         <CardTitle>Text Splitting</CardTitle>
         <CardDescription>
-          Visualize how documents are split into meaningful chunks while
-          preserving semantic coherence
+          See how a document is cut into chunks that still make sense.
         </CardDescription>
         <ul className="space-y-2 text-sm">
           <li className="flex items-start space-x-2">
             <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
             <div>
-              <strong className="text-foreground">
-                Fixed Character strategy:
-              </strong>{" "}
-              Simple uniform segmentation based on predetermined character
-              length. Best for prototyping and resource-constrained environments
-              with minimal computational overhead.
+              <strong className="text-foreground">Fixed Character:</strong>{" "}
+              Cuts only at the first separator, then fills each chunk up to the
+              size limit.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
             <div>
-              <strong className="text-foreground">
-                Recursive character strategy:
-              </strong>{" "}
-              Multi-tier algorithm that preserves natural language boundaries
-              and semantic coherence. Recommended for applications requiring
-              semantic integrity.
+              <strong className="text-foreground">Recursive Character:</strong>{" "}
+              Tries each separator in order, so chunks break at natural spots.
+              Best default.
             </div>
           </li>
           <li className="flex items-start space-x-2">
             <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
             <div>
-              <strong className="text-foreground">
-                Parent-Child character strategy:
-              </strong>{" "}
-              Dual-tier architecture using fine-grained chunks for precise
-              matching while maintaining parent documents for rich contextual
-              information. Optimal for complex applications requiring balanced
-              accuracy and completeness.
+              <strong className="text-foreground">Parent-Child:</strong>{" "}
+              Searches small chunks for precision, then answers with their
+              larger parent for context.
             </div>
           </li>
         </ul>
         <blockquote className="text-xs text-muted-foreground border-l-4 border-muted-foreground/25 px-4 py-2 space-y-2">
-          When merging and splitting segments, some segments themselves exceed
-          the chunk size in length, or the splitting and reassembly logic causes
-          the combined length to exceed the set value, resulting in over-limit
-          chunks.
+          Some chunks may go over the size limit when text can&apos;t be cut
+          cleanly.
         </blockquote>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center space-x-4">
-          <span className="text-sm font-medium">Split Strategy:</span>
+          <span className="text-sm font-medium">Strategy</span>
           <StrategySelector />
         </div>
         <div className="flex items-center space-x-4">

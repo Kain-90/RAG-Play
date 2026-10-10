@@ -67,21 +67,21 @@ export function GenerationTab() {
   const hasGenerationInput = topSimilarBlocks.length > 0 && Boolean(question);
   const thinkingSteps = [
     {
-      label: `Collected ${topSimilarBlocks.length} retrieved context chunk${
+      label: `Got ${topSimilarBlocks.length} matching chunk${
         topSimilarBlocks.length === 1 ? "" : "s"
       }`,
       isComplete: hasGenerationInput,
     },
     {
-      label: "Composed system instructions and user question",
+      label: "Built the prompt",
       isComplete: hasGenerationInput,
     },
     {
       label: hasGeneratedAnswer
-        ? "Generated a grounded response"
+        ? "Answer ready"
         : isLoading
-          ? "Generating a grounded response"
-          : "Ready to generate a grounded response",
+          ? "Writing the answer…"
+          : "Ready to answer",
       isComplete: hasGeneratedAnswer,
     },
   ];
@@ -120,10 +120,10 @@ export function GenerationTab() {
           <div>
             <CardTitle>Context Generation</CardTitle>
             <CardDescription>
-              Observe how LLMs combine retrieved context with user queries to generate accurate, contextual responses
+              See how the LLM uses the top 3 chunks as context to answer your question.
               {strategy === "parent-child" && topSimilarBlocks.length > 0 && (
                 <span className="block mt-2 px-2 py-1 rounded bg-purple-50 text-purple-700 text-xs">
-                  Using parent chunks as context for richer information retrieval
+                  Using parent chunks for fuller context.
                 </span>
               )}
             </CardDescription>
@@ -134,16 +134,18 @@ export function GenerationTab() {
             onClick={handleGenerate}
             className="min-w-[140px]"
             aria-label={
-              isDisabled ? "Cannot generate response yet" : "Generate response"
+              isDisabled
+                ? "Ask a question in Semantic Search first"
+                : "Generate answer"
             }
           >
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-b-transparent" />
-                <span>Generating...</span>
+                <span>Generating…</span>
               </div>
             ) : (
-              "Generate Response"
+              "Generate Answer"
             )}
           </Button>
         </div>
@@ -152,7 +154,7 @@ export function GenerationTab() {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center">
             <label className="text-sm font-medium flex items-center gap-2">
-              Temperature:
+              Temperature
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -160,8 +162,7 @@ export function GenerationTab() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
-                      Controls randomness in the output. Higher values (0.8-1.0) make the output more creative but less focused,
-                      lower values (0.2-0.5) make it more deterministic and focused.
+                      Higher = more creative. Lower = more focused. Try 0.2–0.5 for facts.
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -186,7 +187,7 @@ export function GenerationTab() {
           </div>
           <div className="flex items-center">
             <label className="text-sm font-medium flex items-center gap-2">
-              Max Tokens:
+              Max Tokens
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -194,8 +195,7 @@ export function GenerationTab() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
-                      Maximum number of tokens to generate in the response. Higher values allow for longer responses
-                      but may increase processing time and costs.
+                      Caps answer length. Higher allows longer answers but takes more time.
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -222,7 +222,7 @@ export function GenerationTab() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Prompt Preview Section */}
           <section className="space-y-2" aria-label="Prompt Preview Section">
-            <label className="text-sm font-medium">Prompt Preview:</label>
+            <label className="text-sm font-medium">Prompt Preview</label>
             <div
               className={cn(
                 GENERATION_SPLIT_HEIGHT_CLASS,
@@ -255,7 +255,7 @@ export function GenerationTab() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    Start by asking a question in the Semantic Search tab
+                    Ask a question in Semantic Search first.
                   </div>
                 )}
               </ScrollArea>
@@ -264,7 +264,7 @@ export function GenerationTab() {
 
           {/* Generated Answer Section */}
           <section className="space-y-2" aria-label="Generated Answer Section">
-            <label className="text-sm font-medium">Model Response:</label>
+            <label className="text-sm font-medium">Model Answer</label>
             <div
               className={cn(
                 GENERATION_SPLIT_HEIGHT_CLASS,
@@ -277,7 +277,7 @@ export function GenerationTab() {
                     className="h-4 w-4 text-muted-foreground"
                     aria-hidden
                   />
-                  <span>Generation pipeline</span>
+                  <span>Steps</span>
                 </div>
                 {hasGenerationInput ? (
                   <div className="space-y-3">
@@ -314,13 +314,13 @@ export function GenerationTab() {
                     })}
                     {isLoading && (
                       <p className="pl-6 text-xs text-muted-foreground">
-                        Streaming tokens from the model...
+                        The answer appears as it&apos;s written…
                       </p>
                     )}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center text-muted-foreground">
-                    Run semantic search first to prepare generation context
+                    Ask a question in Semantic Search first.
                   </div>
                 )}
               </div>
@@ -338,7 +338,7 @@ export function GenerationTab() {
                     </div>
                   ) : (
                     <div className="flex h-full items-center justify-center text-muted-foreground">
-                      Click &quot;Generate Response&quot; to see the model&apos;s answer
+                      Click Generate Answer to see the reply.
                     </div>
                   )}
                 </ScrollArea>

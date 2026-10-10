@@ -27,11 +27,11 @@ export function LoadingPanel({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">
-            {loadingState.status === "loading-model" && "Loading model..."}
+            {loadingState.status === "loading-model" && "Loading model in your browser…"}
             {["idle", "embedding", "loading-model-complete"].includes(
               loadingState.status
-            ) && "Model loaded"}
-            {loadingState.status === "error" && "Error"}
+            ) && "Model ready"}
+            {loadingState.status === "error" && "Model failed to load"}
           </span>
           {["idle", "embedding", "loading-model-complete"].includes(
             loadingState.status
@@ -49,12 +49,13 @@ export function LoadingPanel({
       {fileProgresses.size > 0 && (
         <div className="space-y-2 text-xs text-muted-foreground">
           <div className="flex items-center justify-between text-sm text-foreground">
-            <span>Files</span>
+            <span>Model Files</span>
             <Button
               variant="ghost"
               size="sm"
               className="h-6 px-2"
               onClick={onToggleExpanded}
+              aria-label={isLoadingExpanded ? "Hide files" : "Show files"}
             >
               {isLoadingExpanded ? (
                 <ChevronUp className="h-4 w-4" />

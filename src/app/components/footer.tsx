@@ -10,7 +10,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex flex-col items-center gap-4 md:flex-row md:gap-6">
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              Built by{" "}
+              Made by{" "}
               <Link
                 href={myUrl}
                 target="_blank"
@@ -19,7 +19,7 @@ export function Footer() {
               >
                 Kain
               </Link>
-              . The source code is available on{" "}
+              . Code on{" "}
               <Link
                 href={githubUrl}
                 target="_blank"

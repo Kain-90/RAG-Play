@@ -19,7 +19,7 @@ export const OverlapSizeInput = () => {
   return (
     <div className="flex items-center">
       <label className="text-sm font-medium flex items-center gap-2">
-        Overlap Size:
+        Overlap
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -27,8 +27,8 @@ export const OverlapSizeInput = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                Number of characters to overlap between chunks. Helps maintain
-                context across chunk boundaries.
+                Characters shared by neighboring chunks, so ideas aren&apos;t
+                cut in half.
               </p>
             </TooltipContent>
           </Tooltip>

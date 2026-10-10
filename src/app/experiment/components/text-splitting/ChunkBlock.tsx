@@ -24,7 +24,7 @@ export function ChunkBlock({ block, index, onHover }: ChunkBlockProps) {
         {block.overlapText && block.overlapText.length > 0 && (
           <span
             className="inline-block px-1.5 py-0.5 -ml-1 border-2 border-dashed border-orange-400 bg-orange-100 text-orange-800 rounded font-medium text-xs mr-1"
-            title={`Overlap: ${block.overlapText.length} characters`}
+            title={`${block.overlapText.length} characters shared with previous chunk`}
           >
             ↪ {block.overlapText}
           </span>

@@ -65,22 +65,13 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
       <CardHeader>
         <CardTitle>Vector Embedding</CardTitle>
         <CardDescription>
-          View knowledge-base chunks and their vector embeddings side by side
-          before any query-time retrieval happens.
+          See each chunk next to its vector: the numbers a model uses to capture
+          meaning.
         </CardDescription>
         <blockquote className="space-y-2 border-l-4 border-muted-foreground/25 px-4 py-2 text-xs text-muted-foreground">
           <p>
-            Words that are semantically similar are often represented by vectors
-            that are close to each other in this vector space. This allows for
-            mathematical operations like addition and subtraction to carry
-            semantic meaning.
-          </p>
-          <p>
-            For example, the vector representation of &quot;king&quot; minus
-            &quot;man&quot; plus &quot;woman&quot; should be close to the vector
-            representation of &quot;queen.&quot; In other words, vector
-            embeddings are a numerical representation of a particular data
-            object.
+            Similar meanings get nearby vectors. Famously, king − man + woman ≈
+            queen.
           </p>
         </blockquote>
       </CardHeader>
@@ -100,7 +91,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
             <div className="w-1/2">
               <LowVectorVisualization
                 data={embedding2d}
-                title="Chunk Embedding Space"
+                title="Chunks in 2D"
                 datasetLabel="Chunks"
                 className="h-[400px]"
               />
@@ -108,28 +99,20 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
 
             <div className="w-1/2 text-sm text-muted-foreground space-y-2 rounded-lg border border-border bg-muted/50 p-4">
               <p>
-                This visualization uses UMAP (Uniform Manifold Approximation and
-                Projection) to reduce the high-dimensional embedding vectors
-                (typically 384 or 768 dimensions) into 2D space for
-                visualization purposes.
+                UMAP squeezes hundreds of dimensions into 2D so you can see
+                them. Treat it as a rough map.
               </p>
               <p>
-                <strong>Important notes:</strong>
+                <strong>Keep in mind</strong>
               </p>
               <ul className="list-disc list-inside space-y-1">
                 <li>
-                  The visualization is approximate - distances between points in
-                  2D may not exactly match the actual cosine similarities
-                  between the original high-dimensional vectors.
+                  Distances here are approximate, not exact similarity scores.
                 </li>
+                <li>The layout can shift each run. That&apos;s normal.</li>
                 <li>
-                  UMAP results can vary between runs due to its stochastic
-                  nature. The same embeddings may appear in different
-                  arrangements each time the visualization is generated.
-                </li>
-                <li>
-                  This view only plots document chunks, so it represents the
-                  indexed knowledge base before a user query is embedded.
+                  Only chunks appear here. Your question shows up in Semantic
+                  Search.
                 </li>
               </ul>
             </div>
@@ -138,7 +121,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Chunks:</label>
+            <label className="text-sm font-medium">Chunks</label>
             <div
               className="rounded-lg border-2 border-dashed border-muted-foreground/25"
               style={{ height: EMBEDDING_CONSTANTS.CHUNK_LIST_HEIGHT }}
@@ -153,7 +136,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
                       >
                         <p className="text-sm">{block.text}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Chunk {index + 1} • {block.text.length} characters
+                          Chunk {index + 1} · {block.text.length} chars
                           {strategy === "parent-child" &&
                             block.parentId !== undefined && (
                               <span className="ml-2 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-medium">
@@ -166,7 +149,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    Add text in the Text Splitting tab first.
+                    No chunks yet. Add text in Text Splitting.
                   </div>
                 )}
               </ScrollArea>
@@ -175,7 +158,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">
-              Chunks Embedding Vectors:
+              Chunk Vectors
             </label>
             <div
               className="rounded-lg border-2 border-dashed border-muted-foreground/25"
@@ -184,7 +167,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
               <ScrollArea className="h-full p-4">
                 {loadingState.status === "embedding" ? (
                   <div className="flex items-center justify-center h-full">
-                    Embedding... {embeddingProgress}%
+                    Embedding chunks… {embeddingProgress}%
                   </div>
                 ) : blocksEmbedding.length > 0 ? (
                   <div className="space-y-4">
@@ -203,7 +186,7 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
                             ...]
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            Chunk {blockIndex + 1} • {blockEmbedding[0].length}{" "}
+                            Chunk {blockIndex + 1} · {blockEmbedding[0].length}{" "}
                             dimensions
                           </p>
                         </div>
@@ -213,10 +196,10 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
                     {loadingState.status === "error"
-                      ? `Error: ${loadingState.error}`
+                      ? `Couldn't create vectors. ${loadingState.error}`
                       : loadingState.status !== "idle"
-                      ? "Waiting for model to load..."
-                      : "No chunks to embed"}
+                      ? "Waiting for the model…"
+                      : "Vectors appear here."}
                   </div>
                 )}
               </ScrollArea>

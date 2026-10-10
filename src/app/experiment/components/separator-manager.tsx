@@ -22,21 +22,17 @@ export function SeparatorManager() {
     <div className="flex items-center space-x-4 mt-4">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium flex items-center gap-2">
-          Separators:
+          Separators
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
                 <HelpCircle className="h-4 w-4 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Custom separators to use for text splitting.</p>
-                <p className="mb-2">
-                  Split paragraphs in order by using separators and merge
-                  smaller chunks according to the overlap size.
-                </p>
-                <span className="font-mono">¶ means line break</span>
+                <p className="mb-2">Where text can be cut, tried in order.</p>
+                <span className="font-mono">¶ = line break</span>
                 <br />
-                <span className="font-mono">␣ means space</span>
+                <span className="font-mono">␣ = space</span>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
