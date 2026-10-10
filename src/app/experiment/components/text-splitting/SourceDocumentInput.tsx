@@ -45,13 +45,16 @@ export const SourceDocumentInput = () => {
           </a>
         </div>
       </div>
-      <Textarea
-        ref={textareaRef}
-        value={getHighlightedText()}
-        onChange={handleTextChange}
-        className="min-h-screen resize-y border-2 border-dashed border-muted-foreground/25 focus-visible:ring-1 font-mono"
-        placeholder="Paste or type text to split…"
-      />
+      {/* Padding lives on the frame, not the textarea, so text never touches the border mid-scroll. */}
+      <div className="flex min-h-screen flex-col rounded-lg border-2 border-dashed border-muted-foreground/25 py-3 focus-within:ring-1 focus-within:ring-ring">
+        <Textarea
+          ref={textareaRef}
+          value={getHighlightedText()}
+          onChange={handleTextChange}
+          className="min-h-0 flex-auto resize-y rounded-none border-0 py-0 font-mono shadow-none focus-visible:ring-0"
+          placeholder="Paste or type text to split…"
+        />
+      </div>
     </div>
   );
 };

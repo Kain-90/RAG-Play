@@ -182,110 +182,113 @@ export const GeneratedChunks = () => {
           Hover a chunk to find it in your text.
         </div>
       </div>
-      <div className="max-h-screen rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 p-4 overflow-y-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4 pb-3 border-b border-border/50">
-          {strategy === "parent-child" && parentChildStats ? (
-            <>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium text-muted-foreground">
-                  Parents
-                </span>
-                <span className="text-sm font-semibold">
-                  {parentChildStats.parentCount}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium text-muted-foreground">
-                  Children
-                </span>
-                <span className="text-sm font-semibold">
-                  {parentChildStats.childCount}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Children per Parent</span>
-                <span className="text-sm font-semibold">
-                  {parentChildStats.avgChildrenPerParent}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Avg. Overlap</span>
-                <span className="text-sm font-semibold">
-                  {overlapStats.average} chars
-                </span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium text-muted-foreground">
-                  Chunks
-                </span>
-                <span className="text-sm font-semibold">{blocks.length}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium text-muted-foreground">
-                  Avg. Size
-                </span>
-                <span className="text-sm font-semibold">
-                  {blocks.length > 0
-                    ? Math.round(
-                        blocks.reduce(
-                          (acc, block) => acc + block.text.length,
-                          0
-                        ) / blocks.length
-                      )
-                    : 0}{" "}
-                  chars
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Overlapping</span>
-                <span className="text-sm font-semibold">
-                  {overlapStats.total}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
-                <span className="text-xs font-medium">Avg. Overlap</span>
-                <span className="text-sm font-semibold">
-                  {overlapStats.average} chars
-                </span>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="text-base leading-relaxed">
-          {strategy === "parent-child"
-            ? (() => {
-                const parentGroups: { [key: number]: EnhancedTextBlock[] } = {};
-                blocks.forEach((block) => {
-                  const parentId = block.parentId ?? 0;
-                  if (!parentGroups[parentId]) {
-                    parentGroups[parentId] = [];
-                  }
-                  parentGroups[parentId].push(block);
-                });
+      {/* Padding lives on the frame, not the scroller, so text never touches the border mid-scroll. */}
+      <div className="flex max-h-screen flex-col rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4 pb-3 border-b border-border/50">
+            {strategy === "parent-child" && parentChildStats ? (
+              <>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Parents
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {parentChildStats.parentCount}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Children
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {parentChildStats.childCount}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium">Children per Parent</span>
+                  <span className="text-sm font-semibold">
+                    {parentChildStats.avgChildrenPerParent}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium">Avg. Overlap</span>
+                  <span className="text-sm font-semibold">
+                    {overlapStats.average} chars
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Chunks
+                  </span>
+                  <span className="text-sm font-semibold">{blocks.length}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Avg. Size
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {blocks.length > 0
+                      ? Math.round(
+                          blocks.reduce(
+                            (acc, block) => acc + block.text.length,
+                            0
+                          ) / blocks.length
+                        )
+                      : 0}{" "}
+                    chars
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium">Overlapping</span>
+                  <span className="text-sm font-semibold">
+                    {overlapStats.total}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md">
+                  <span className="text-xs font-medium">Avg. Overlap</span>
+                  <span className="text-sm font-semibold">
+                    {overlapStats.average} chars
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="text-base leading-relaxed">
+            {strategy === "parent-child"
+              ? (() => {
+                  const parentGroups: { [key: number]: EnhancedTextBlock[] } = {};
+                  blocks.forEach((block) => {
+                    const parentId = block.parentId ?? 0;
+                    if (!parentGroups[parentId]) {
+                      parentGroups[parentId] = [];
+                    }
+                    parentGroups[parentId].push(block);
+                  });
 
-                return Object.entries(parentGroups).map(
-                  ([parentId, childBlocks]) => (
-                    <ParentGroup
-                      key={`parent-${parentId}`}
-                      parentId={parseInt(parentId)}
-                      childBlocks={childBlocks}
-                      blocks={blocks}
-                      onChunkHover={handleChunkHover}
-                    />
-                  )
-                );
-              })()
-            : blocks.map((block, index) => (
-                <ChunkBlock
-                  key={index}
-                  block={block}
-                  index={index}
-                  onHover={handleChunkHover}
-                />
-              ))}
+                  return Object.entries(parentGroups).map(
+                    ([parentId, childBlocks]) => (
+                      <ParentGroup
+                        key={`parent-${parentId}`}
+                        parentId={parseInt(parentId)}
+                        childBlocks={childBlocks}
+                        blocks={blocks}
+                        onChunkHover={handleChunkHover}
+                      />
+                    )
+                  );
+                })()
+              : blocks.map((block, index) => (
+                  <ChunkBlock
+                    key={index}
+                    block={block}
+                    index={index}
+                    onHover={handleChunkHover}
+                  />
+                ))}
+          </div>
         </div>
       </div>
     </div>
