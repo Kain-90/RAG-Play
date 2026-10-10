@@ -29,7 +29,8 @@ interface TextSplittingState {
   setFixedSeparator: (separator: Separator) => void;
   addRecursiveSeparator: (separator: Separator) => void;
   removeRecursiveSeparator: (char: string) => void;
-  resetSeparators: () => void;
+  resetFixedSeparator: () => void;
+  resetRecursiveSeparators: () => void;
   setTextareaRef: (textareaRef: React.RefObject<HTMLTextAreaElement> | null) => void;
   setHoveredChunkIndex: (hoveredChunkIndex: number | null) => void;
 }
@@ -69,11 +70,9 @@ export const useTextSplittingStore = create<TextSplittingState>((set) => ({
             ),
           }
     ),
-  resetSeparators: () =>
-    set({
-      fixedSeparator: DEFAULT_FIXED_SEPARATOR,
-      recursiveSeparators: DEFAULT_RECURSIVE_SEPARATORS,
-    }),
+  resetFixedSeparator: () => set({ fixedSeparator: DEFAULT_FIXED_SEPARATOR }),
+  resetRecursiveSeparators: () =>
+    set({ recursiveSeparators: DEFAULT_RECURSIVE_SEPARATORS }),
   setTextareaRef: (textareaRef) => set({ textareaRef }),
   setHoveredChunkIndex: (hoveredChunkIndex) => set({ hoveredChunkIndex }),
 }));

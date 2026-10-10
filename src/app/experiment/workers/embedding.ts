@@ -102,6 +102,7 @@ self.addEventListener(
           status: "complete",
           type: event.data.type,
           output: [],
+          input: [],
         } as EmbeddingProgressMessage);
         return;
       }
@@ -118,6 +119,9 @@ self.addEventListener(
         output: Array.isArray(output)
           ? output.map((o) => o.tolist())
           : [output.tolist()],
+        input: Array.isArray(event.data.text)
+          ? event.data.text
+          : [event.data.text],
       } as EmbeddingProgressMessage);
     } catch (error) {
       console.error("Worker error:", error);

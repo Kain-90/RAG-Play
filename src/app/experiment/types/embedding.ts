@@ -19,6 +19,8 @@ export type EmbeddingProgressMessage = {
   progress?: LangchainProgress;
   message?: string;
   output?: number[][][];
+  /** Texts that `output` was computed from, in the same order. */
+  input?: string[];
   type?: "question" | "blocks";
 };
 

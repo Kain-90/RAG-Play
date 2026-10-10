@@ -25,11 +25,8 @@ interface EmbeddingTabProps {
 
 export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
   const { blocks, strategy } = useTextSplittingStore();
-  const {
-    blocksEmbedding,
-    model,
-    setModel,
-  } = useEmbeddingStore();
+  const { blocksEmbedding, blocksEmbeddingTexts, model, setModel } =
+    useEmbeddingStore();
 
   const {
     loadingState,
@@ -43,8 +40,18 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
   const { highlightedIndex, getChunkElementId, highlightChunk } =
     useChunkHighlight("embedding-chunk");
 
+  // Vectors count only if they were computed from exactly these chunk texts;
+  // otherwise they belong to an earlier split and must not be shown or plotted.
+  const hasCurrentVectors =
+    blocks.length > 0 &&
+    blocksEmbeddingTexts.length === blocks.length &&
+    blocks.every((block, index) => block.text === blocksEmbeddingTexts[index]);
+
   const embedding2d = useMemo(() => {
-    if (blocksEmbedding.length < EMBEDDING_CONSTANTS.MIN_EMBEDDING_POINTS) {
+    if (
+      !hasCurrentVectors ||
+      blocksEmbedding.length < EMBEDDING_CONSTANTS.MIN_EMBEDDING_POINTS
+    ) {
       return [];
     }
 
@@ -58,22 +65,17 @@ export function EmbeddingTab({ embeddingWorker }: EmbeddingTabProps) {
     } catch {
       return [];
     }
-  }, [blocksEmbedding]);
-
-  // Hide vectors while re-embedding so stale vectors never sit next to new text.
-  const hasCurrentVectors =
-    loadingState.status !== "embedding" &&
-    blocksEmbedding.length === blocks.length;
+  }, [blocksEmbedding, hasCurrentVectors]);
 
   const getVectorStatus = (): string | null => {
+    if (hasCurrentVectors) {
+      return null;
+    }
     if (loadingState.status === "embedding") {
       return `Embedding chunks… ${embeddingProgress}%`;
     }
     if (loadingState.status === "error") {
       return `Couldn't create vectors. ${loadingState.error}`;
-    }
-    if (hasCurrentVectors || loadingState.status === "idle") {
-      return null;
     }
     return "Waiting for the model…";
   };

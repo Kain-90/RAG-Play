@@ -59,13 +59,25 @@ export function SemanticSearchTab({
     [clearSemanticSearch, debouncedGetEmbedding, setQuestion]
   );
 
+  const isSearching = loadingState.status === "embedding";
+
   const handlePointClick = (index: number) => {
-    if (highlightChunk(index)) {
+    // Top Matches has no cards while searching, so there is nothing to jump to yet.
+    if (isSearching) {
       return;
     }
-    toast(
-      `Chunk ${index + 1} isn't in the top ${EMBEDDING_CONSTANTS.SIMILARITY_TOP_N} matches.`
-    );
+
+    const isTopMatch = similarities
+      .slice(0, EMBEDDING_CONSTANTS.SIMILARITY_TOP_N)
+      .some((match) => match.index === index);
+    if (!isTopMatch) {
+      toast(
+        `Chunk ${index + 1} isn't in the top ${EMBEDDING_CONSTANTS.SIMILARITY_TOP_N} matches.`
+      );
+      return;
+    }
+
+    highlightChunk(index);
   };
 
   return (
@@ -92,7 +104,7 @@ export function SemanticSearchTab({
           <SimilarityPanel
             similarities={similarities}
             blocks={blocks}
-            isLoading={loadingState.status === "embedding"}
+            isLoading={isSearching}
             highlightedIndex={highlightedIndex}
             getChunkElementId={getChunkElementId}
           />

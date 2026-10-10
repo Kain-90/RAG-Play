@@ -32,7 +32,8 @@ export function SeparatorManager() {
     setFixedSeparator,
     addRecursiveSeparator,
     removeRecursiveSeparator,
-    resetSeparators,
+    resetFixedSeparator,
+    resetRecursiveSeparators,
   } = useTextSplittingStore();
   const [customInput, setCustomInput] = useState("");
   const isFixed = strategy === "character";
@@ -59,7 +60,13 @@ export function SeparatorManager() {
   };
 
   const handleCustomKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") {
+    // Enter that confirms an IME candidate (e.g. typing 。) must not submit.
+    // Safari reports isComposing as false here, hence the keyCode 229 check.
+    if (
+      e.key !== "Enter" ||
+      e.nativeEvent.isComposing ||
+      e.keyCode === 229
+    ) {
       return;
     }
     e.preventDefault();
@@ -178,7 +185,7 @@ export function SeparatorManager() {
           size="sm"
           variant="ghost"
           className="h-8 text-muted-foreground"
-          onClick={resetSeparators}
+          onClick={isFixed ? resetFixedSeparator : resetRecursiveSeparators}
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset

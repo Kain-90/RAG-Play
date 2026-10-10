@@ -64,7 +64,7 @@ export function useEmbeddingWorker({
 
   const handleWorkerMessage = useCallback(
     (event: MessageEvent<EmbeddingProgressMessage>) => {
-      const { status, progress, message, output, type } = event.data;
+      const { status, progress, message, output, input, type } = event.data;
 
       if (status === "loading" && progress?.file) {
         setLoadingState({
@@ -118,7 +118,7 @@ export function useEmbeddingWorker({
         if (type === "question") {
           setQuestionEmbedding(output[0]);
         } else {
-          setBlocksEmbedding(output);
+          setBlocksEmbedding(output, input);
 
           // Auto-compute question embedding after blocks are done (for similarity calculation)
           if (autoComputeRef.current.enabled && !autoComputeRef.current.blocksDone && workerRef.current) {

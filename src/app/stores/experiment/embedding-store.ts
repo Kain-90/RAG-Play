@@ -36,11 +36,13 @@ interface EmbeddingState {
   similarities: SimilarityResult[];
   questionEmbedding: number[][];
   blocksEmbedding: number[][][];
+  /** Chunk texts the vectors were computed from, to detect stale vectors. */
+  blocksEmbeddingTexts: string[];
   question: string;
   model: EmbeddingModel;
   worker: Worker | null;
   setQuestionEmbedding: (questionEmbedding: number[][]) => void;
-  setBlocksEmbedding: (blocksEmbedding: number[][][]) => void;
+  setBlocksEmbedding: (blocksEmbedding: number[][][], texts?: string[]) => void;
   setQuestion: (question: string) => void;
   setModel: (model: EmbeddingModel) => void;
   setWorker: (worker: Worker | null) => void;
@@ -52,13 +54,14 @@ export const useEmbeddingStore = create<EmbeddingState>((set, get) => ({
   similarities: [],
   questionEmbedding: [],
   blocksEmbedding: [],
+  blocksEmbeddingTexts: [],
   question: DEFAULT_QUESTION,
   model: DEFAULT_MODEL,
   worker: null,
   setQuestionEmbedding: (questionEmbedding) =>
     set({ questionEmbedding }),
-  setBlocksEmbedding: (blocksEmbedding) =>
-    set({ blocksEmbedding }),
+  setBlocksEmbedding: (blocksEmbedding, texts = []) =>
+    set({ blocksEmbedding, blocksEmbeddingTexts: texts }),
   setQuestion: (question) => set({ question }),
   setModel: (model) => set({ model }),
   setWorker: (worker) => set({ worker }),
