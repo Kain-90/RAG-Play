@@ -84,5 +84,23 @@ export const DEFAULT_SEPARATORS: Separator[] = [
   },
 ];
 
-export const CHARACTER_SEPARATORS: Separator = DEFAULT_SEPARATORS[0];
-export const RECURSIVE_CHARACTER_SEPARATORS: Separator[] = DEFAULT_SEPARATORS;
+/** Empty separator: LangChain then cuts every N characters, even mid-word. */
+export const EVERY_CHARACTER_SEPARATOR: Separator = {
+  id: "every-character",
+  charInput: "",
+  char: "",
+  display: "Every char",
+  style: {
+    bg: "bg-purple-200",
+    text: "text-purple-700",
+  },
+};
+
+/** Single-choice options for the Fixed Character strategy. */
+export const FIXED_SEPARATOR_PRESETS: Separator[] = [
+  EVERY_CHARACTER_SEPARATOR,
+  ...DEFAULT_SEPARATORS,
+];
+
+export const DEFAULT_FIXED_SEPARATOR: Separator = EVERY_CHARACTER_SEPARATOR;
+export const DEFAULT_RECURSIVE_SEPARATORS: Separator[] = DEFAULT_SEPARATORS;

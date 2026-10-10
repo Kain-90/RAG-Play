@@ -25,8 +25,8 @@ export function TextSplittingTab() {
             <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
             <div>
               <strong className="text-foreground">Fixed Character:</strong>{" "}
-              Cuts only at the first separator, then fills each chunk up to the
-              size limit.
+              Cuts at one separator you pick. Default: every N characters, even
+              mid-word.
             </div>
           </li>
           <li className="flex items-start space-x-2">

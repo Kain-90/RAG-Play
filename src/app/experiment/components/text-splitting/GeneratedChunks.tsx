@@ -2,11 +2,7 @@
 import { useMemo } from "react";
 import { useTextSplittingStore } from "@/app/stores/experiment/text-splitting-store";
 import { useDebouncedCallback } from "use-debounce";
-import {
-  CHARACTER_SEPARATORS,
-  EnhancedTextBlock,
-  RECURSIVE_CHARACTER_SEPARATORS,
-} from "@/app/experiment/types/text-splitting";
+import { EnhancedTextBlock } from "@/app/experiment/types/text-splitting";
 import { splitText } from "@/app/utils/split-text";
 import { toast } from "sonner";
 import { useEffect } from "react";
@@ -22,13 +18,13 @@ export const GeneratedChunks = () => {
     chunkSize,
     overlap,
     parentChunkSize,
+    fixedSeparator,
+    recursiveSeparators,
     setBlocks,
     setHoveredChunkIndex,
   } = useTextSplittingStore();
   const separators =
-    strategy === "recursive-character" || strategy === "parent-child"
-      ? RECURSIVE_CHARACTER_SEPARATORS
-      : CHARACTER_SEPARATORS;
+    strategy === "character" ? fixedSeparator : recursiveSeparators;
 
   // Modify the chunk hover handler to include scrolling
   const handleChunkHover = (index: number | null) => {
@@ -134,7 +130,7 @@ export const GeneratedChunks = () => {
 
   useEffect(() => {
     debouncedSplitText();
-  }, [debouncedSplitText, text, strategy, chunkSize, overlap, parentChunkSize]);
+  }, [debouncedSplitText, text, strategy, chunkSize, overlap, parentChunkSize, separators]);
 
   const overlapStats = useMemo(() => {
     return {

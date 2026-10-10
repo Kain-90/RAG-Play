@@ -10,7 +10,14 @@ import { Input } from "@/components/ui/input";
 import { useTextSplittingStore } from "@/app/stores/experiment/text-splitting-store";
 
 export const OverlapSizeInput = () => {
-  const { chunkSize, overlap, setOverlap } = useTextSplittingStore();
+  const { chunkSize, overlap, setOverlap, blocks, strategy } =
+    useTextSplittingStore();
+  // Parent-Child only overlaps within a parent, so an empty result there isn't a size problem.
+  const hasNoOverlap =
+    strategy !== "parent-child" &&
+    overlap > 0 &&
+    blocks.length > 1 &&
+    blocks.every((block) => !block.overlapText);
 
   const handleOverlapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOverlap(Number(e.target.value));
@@ -42,6 +49,11 @@ export const OverlapSizeInput = () => {
         max={chunkSize - 1}
         className="w-24 ml-2"
       />
+      {hasNoOverlap && (
+        <span role="status" className="ml-2 text-xs text-muted-foreground">
+          No overlap: pieces are longer than Overlap. Try a smaller separator.
+        </span>
+      )}
     </div>
   );
 };
