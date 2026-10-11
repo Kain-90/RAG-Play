@@ -8,7 +8,6 @@ import {
   Legend,
   Title,
   Plugin,
-  ChartOptions,
   TooltipItem,
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
@@ -16,33 +15,30 @@ import { cn } from "@/lib/utils";
 import {
   Vector,
   LowVectorVisualizationProps,
+  ExtendedChartOptions,
+  QueryLinksPluginOptions,
 } from "@/app/experiment/types/chart";
 
-const nearestNeighborsPlugin: Plugin<"scatter"> = {
-  id: "nearestNeighbors",
-  afterDraw: (chart) => {
+// UMAP distorts distances, so the caller supplies the true top matches to link.
+const queryLinksPlugin: Plugin<"scatter"> = {
+  id: "queryLinks",
+  afterDraw: (chart, _args, options: QueryLinksPluginOptions) => {
     const { ctx, scales } = chart;
     const queryDataset = chart.data.datasets[1];
     const vectorsDataset = chart.data.datasets[0];
 
-    if (!queryDataset?.data[0] || !vectorsDataset?.data.length) {
+    if (!queryDataset?.data[0]) {
       return;
     }
 
     const query = queryDataset.data[0] as Vector;
     const vectors = vectorsDataset.data as Vector[];
+    const linkedPoints = options.indices
+      .map((index) => vectors[index])
+      .filter((point): point is Vector => Boolean(point));
 
-    // Calculate distances and find 5 nearest neighbors
-    const nearestPoints = vectors
-      .map((point) => ({
-        ...point,
-        distance: Math.sqrt(
-          Math.pow((point.x as number) - (query.x as number), 2) +
-            Math.pow((point.y as number) - (query.y as number), 2)
-        ),
-      }))
-      .sort((a, b) => a.distance! - b.distance!)
-      .slice(0, 5);
+    const startX = scales.x.getPixelForValue(query.x);
+    const startY = scales.y.getPixelForValue(query.y);
 
     // Draw dashed lines with more visible style
     ctx.save();
@@ -51,14 +47,12 @@ const nearestNeighborsPlugin: Plugin<"scatter"> = {
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
 
-    nearestPoints.forEach((point) => {
-      const startX = scales.x.getPixelForValue(query.x as number);
-      const startY = scales.y.getPixelForValue(query.y as number);
-      const endX = scales.x.getPixelForValue(point.x as number);
-      const endY = scales.y.getPixelForValue(point.y as number);
-
+    linkedPoints.forEach((point) => {
       ctx.moveTo(startX, startY);
-      ctx.lineTo(endX, endY);
+      ctx.lineTo(
+        scales.x.getPixelForValue(point.x),
+        scales.y.getPixelForValue(point.y)
+      );
     });
 
     ctx.stroke();
@@ -74,7 +68,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Title,
-  nearestNeighborsPlugin
+  queryLinksPlugin
 );
 
 const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
@@ -85,6 +79,7 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
   queryLabel = "Query",
   className,
   onPointClick,
+  linkedIndices = [],
 }) => {
   const chartData = useMemo(() => {
     const datasets = [
@@ -122,13 +117,7 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
     return { datasets };
   }, [data, query, datasetLabel, queryLabel]);
 
-  const options: ChartOptions<"scatter"> & {
-    plugins: {
-      nearestNeighbors: {
-        enabled: boolean;
-      };
-    };
-  } = {
+  const options: ExtendedChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     onClick: (_event, elements) => {
@@ -176,8 +165,8 @@ const LowVectorVisualization: FC<LowVectorVisualizationProps> = ({
           },
         },
       },
-      nearestNeighbors: {
-        enabled: true,
+      queryLinks: {
+        indices: linkedIndices,
       },
     },
     scales: {

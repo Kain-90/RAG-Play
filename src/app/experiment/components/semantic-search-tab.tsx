@@ -60,6 +60,9 @@ export function SemanticSearchTab({
   );
 
   const isSearching = loadingState.status === "embedding";
+  const linkedIndices = similarities
+    .slice(0, EMBEDDING_CONSTANTS.CHART_LINK_TOP_N)
+    .map((match) => match.index);
 
   const handlePointClick = (index: number) => {
     // Top Matches has no cards while searching, so there is nothing to jump to yet.
@@ -120,11 +123,15 @@ export function SemanticSearchTab({
                 queryLabel="Question"
                 className="h-[500px]"
                 onPointClick={handlePointClick}
+                linkedIndices={linkedIndices}
               />
               <figcaption className="pt-1 text-sm text-muted-foreground">
                 Your question uses the same model as the chunks, so they can be
                 compared. Chunks are embedded once ahead of time; your question is
-                embedded each time you ask. Click a point to find it in Top
+                embedded each time you ask. Dashed lines link the question to
+                its top {EMBEDDING_CONSTANTS.CHART_LINK_TOP_N} matches; 2D
+                positions are approximate, so the closest-looking points may
+                not be the best matches. Click a point to find it in Top
                 Matches.
               </figcaption>
             </figure>

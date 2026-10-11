@@ -5,7 +5,6 @@ export interface Vector {
   y: number;
   title?: string;
   details?: string[];
-  distance?: number;
 }
 
 export interface LowVectorVisualizationProps {
@@ -17,14 +16,17 @@ export interface LowVectorVisualizationProps {
   className?: string;
   /** Called with the index into `data` when a data point (not the query) is clicked. */
   onPointClick?: (index: number) => void;
+  /** Indices into `data` to link to the query with dashed lines. */
+  linkedIndices?: number[];
 }
 
-export interface NearestNeighborsPluginOptions {
-  enabled: boolean;
+export interface QueryLinksPluginOptions {
+  /** Indices into the data dataset to link to the query point. */
+  indices: number[];
 }
 
 export type ExtendedChartOptions = ChartOptions<"scatter"> & {
   plugins: {
-    nearestNeighbors: NearestNeighborsPluginOptions;
+    queryLinks: QueryLinksPluginOptions;
   };
 };
