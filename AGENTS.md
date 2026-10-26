@@ -135,12 +135,11 @@ Husky runs `npm run lint` automatically before each commit.
 
 ## Environment Variables
 
-LLM provider (resolved in `src/lib/llm.ts`):
-- `LLM_PROVIDER` - `groq` | `mistral` (default `groq`); switch providers without code changes
-- `GROQ_API_KEY` / `GROQ_MODEL` - Groq credentials; model defaults to `openai/gpt-oss-20b`
-- `MISTRAL_API_KEY` / `MISTRAL_MODEL` - Mistral credentials; model defaults to `ministral-14b-latest`
+LLM providers (resolved in `src/lib/llm.ts`, order set by `LLM_PROVIDERS` in `src/app/config.ts`):
+- `GROQ_API_KEY` / `GROQ_MODEL` - Groq credentials, tried first; model defaults to `openai/gpt-oss-20b`
+- `MISTRAL_API_KEY` / `MISTRAL_MODEL` - Mistral credentials, used when Groq fails; model defaults to `ministral-14b-latest`
 
-Only the active provider's API key is required.
+Set at least one key. With both set, `ai-fallback` (v0, for AI SDK 4) moves a request to Mistral when Groq returns 429 or a server error, and tries Groq again after a minute. Providers without a key are skipped.
 
 Optional:
 - `GOOGLE_SITE_VERIFICATION_ID` - For SEO verification
@@ -162,6 +161,7 @@ Optional:
 - `langchain` - Text processing
 - `umap-js` - Dimensionality reduction
 - `ai` / `@ai-sdk/groq` / `@ai-sdk/mistral` - LLM integration
+- `ai-fallback` - Switches providers on rate limits (keep on v0 while on AI SDK 4)
 - `zustand` - State management
 - `tailwindcss-animate` - Animations
 - `sonner` - Toast notifications

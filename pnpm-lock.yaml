@@ -44,6 +44,9 @@ importers:
       ai:
         specifier: ^4.0.7
         version: 4.0.22(react@18.3.1)(zod@3.24.1)
+      ai-fallback:
+        specifier: ^0.1.5
+        version: 0.1.5(zod@3.24.1)
       chart.js:
         specifier: ^4.4.7
         version: 4.4.7
@@ -991,6 +994,9 @@ packages:
   agentkeepalive@4.6.0:
     resolution: {integrity: sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ==}
     engines: {node: '>= 8.0.0'}
+
+  ai-fallback@0.1.5:
+    resolution: {integrity: sha512-/FhTd9SGMEUDYBKbO3ZyfS0CBGglJByMbMRQOGjjDYlxZinFZtn99w1SPh4NZYJWIP5jjoewytfZjp+30QPT1A==}
 
   ai@4.0.22:
     resolution: {integrity: sha512-yvcjWtofI2HZwgT3jMkoNnDUhAY+S9cOvZ6xbbOzrS0ZeFl1/gcbasFnwAqUJ7uL/t72/3a0Vy/pKg6N19A2Mw==}
@@ -3559,6 +3565,13 @@ snapshots:
   agentkeepalive@4.6.0:
     dependencies:
       humanize-ms: 1.2.1
+
+  ai-fallback@0.1.5(zod@3.24.1):
+    dependencies:
+      '@ai-sdk/provider': 1.0.3
+      '@ai-sdk/provider-utils': 2.0.5(zod@3.24.1)
+    transitivePeerDependencies:
+      - zod
 
   ai@4.0.22(react@18.3.1)(zod@3.24.1):
     dependencies:

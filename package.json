@@ -22,6 +22,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@vercel/analytics": "^1.4.1",
     "ai": "^4.0.7",
+    "ai-fallback": "^0.1.5",
     "chart.js": "^4.4.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

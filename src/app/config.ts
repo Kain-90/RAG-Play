@@ -1,3 +1,4 @@
+/** Fallback order: the first provider with an API key is tried first. */
 export const LLM_PROVIDERS = ["groq", "mistral"] as const;
 
 export type LlmProvider = (typeof LLM_PROVIDERS)[number];
@@ -8,9 +9,6 @@ export interface LlmProviderConfig {
 }
 
 export default class AppConfig {
-  /** Active provider; switch via `LLM_PROVIDER` without touching code. */
-  static readonly llmProvider = process.env.LLM_PROVIDER ?? "groq";
-
   static readonly groq: LlmProviderConfig = {
     apiKey: process.env.GROQ_API_KEY,
     model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",

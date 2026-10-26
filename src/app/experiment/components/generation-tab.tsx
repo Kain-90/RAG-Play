@@ -15,7 +15,8 @@ import { SYSTEM_PROMPT_TEMPLATE, USER_PROMPT_TEMPLATE } from "@/app/experiment/c
 import { useChat } from "ai/react";
 import { MessageDisplay } from "./message-display";
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Circle, HelpCircle, ListChecks } from "lucide-react";
+import { AlertCircle, CheckCircle2, Circle, HelpCircle, ListChecks } from "lucide-react";
+import { toast } from "sonner";
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +33,12 @@ const GENERATION_SPLIT_HEIGHT_CLASS =
 export function GenerationTab() {
   const { blocks, strategy } = useTextSplittingStore();
   const { similarities, question } = useEmbeddingStore();
-  const { messages, append, isLoading, setMessages} = useChat();
+  const { messages, append, isLoading, setMessages, error } = useChat({
+    onError: (chatError) => {
+      toast.error("Couldn't generate an answer", { description: chatError.message });
+    },
+  });
+  const generationError = isLoading ? undefined : error;
   
   // For parent-child strategy, use parent chunks as context (deduplicated)
   const topSimilarBlocks = useMemo(() => {
@@ -77,11 +83,13 @@ export function GenerationTab() {
       isComplete: hasGenerationInput,
     },
     {
-      label: hasGeneratedAnswer
-        ? "Answer ready"
-        : isLoading
-          ? "Writing the answer…"
-          : "Ready to answer",
+      label: generationError
+        ? "Couldn't get an answer"
+        : hasGeneratedAnswer
+          ? "Answer ready"
+          : isLoading
+            ? "Writing the answer…"
+            : "Ready to answer",
       isComplete: hasGeneratedAnswer,
     },
   ];
@@ -334,6 +342,15 @@ export function GenerationTab() {
                           message={messages[messages.length - 1].content}
                           isStreaming={isLoading}
                         />
+                      )}
+                      {generationError && (
+                        <div
+                          role="alert"
+                          className="flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-red-600 dark:text-red-400"
+                        >
+                          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                          <span>{generationError.message}</span>
+                        </div>
                       )}
                     </div>
                   ) : (
